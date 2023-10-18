@@ -1,67 +1,63 @@
-import React, {
-    ChangeEvent,
-    useState
-} from 'react';
+import React, {ChangeEvent} from 'react';
 import styled from "styled-components";
 import {FilterTypes} from "./ToDoLists";
+import {InputAddItem} from "./InputAddItem";
+import {EditableTitle} from "./EditableTitle";
+import {
+    Button,
+    Checkbox,
+    IconButton
+} from "@mui/material";
+import {Delete} from "@mui/icons-material";
 
-type TasksType = {
+export type TasksType = {
     id: string
     title: string
     isCheck: boolean
 }
 
 type ToDoListPropsType = {
-    title: string
+    listTitle: string
     tasks: Array<TasksType>
     addTask: (idList: string, newTitleTask: string) => void
     delTask: (idList: string, idTask: string) => void
     filterClick: (idList: string, filter: FilterTypes) => void
     idList: string
     filter: FilterTypes
-    delList: (idList:string)=>void
+    delList: (idList: string) => void
+    updateTaskTitle: (idList: string, idTask: string, newTitle: string) => void
+    updateListTitle: (idList: string, newTitle: string) => void
+    updateCheckbox: (idList: string, idTask: string, isCheck: boolean) => void
 }
 
 export const ToDoList = (props: ToDoListPropsType) => {
-
-    let [newTitleTask, setNeTitleTask] = useState('');
-    let [error, setError] = useState('');
-
-    const delList=()=>props.delList(props.idList)
-
-    const onNewTitleChangeHandler = (event: ChangeEvent<HTMLInputElement>) => setNeTitleTask(event.currentTarget.value)
-    const addTask = () => {
-        if(!newTitleTask.trim()){
-            setError("Title is required");
-            return;
-        }
-        props.addTask(props.idList, newTitleTask);
-        setNeTitleTask('')
-    }
-    const onKeyPressHandler=()=>setError('');
+    const delList = () => props.delList(props.idList)
 
 
     const onAllClickHandler = () => props.filterClick(props.idList, "All");
     const onActiveClickHandler = () => props.filterClick(props.idList, "Active");
     const onCompletedClickHandler = () => props.filterClick(props.idList, "Completed");
 
+    const addTask = (titleTask: string) => {
+        props.addTask(props.idList, titleTask);
+    }
+
+    const updateListTitle = (newTitle: string) => {
+        props.updateListTitle(props.idList, newTitle)
+    }
+
+
     return (
         <ToDoListStyled>
+
             <Title>
-                {props.title}
-                <Button onClick={delList}>x</Button>
+                <EditableTitle title={props.listTitle} updateTitle={updateListTitle}/>
+                <IconButton onClick={delList}>
+                    <Delete/>
+                </IconButton>
             </Title>
 
-            <Input
-                error={error}
-                type={"text"}
-                value={newTitleTask}
-                onChange={onNewTitleChangeHandler}
-                onKeyPress={onKeyPressHandler}
-            />
-            <button onClick={addTask}>+</button>
-            {error? <ErrorText>{error}</ErrorText>:<></>}
-
+            <InputAddItem addItem={addTask}/>
             <ul>
                 {
                     props.tasks.map((task) => {
@@ -69,11 +65,21 @@ export const ToDoList = (props: ToDoListPropsType) => {
                             props.delTask(props.idList, task.id)
                         }
 
+                        const updateTaskTitle = (newTitle: string) => {
+                            props.updateTaskTitle(props.idList, task.id, newTitle)
+                        }
+
+                        const onChangeInputHandler = (event: ChangeEvent<HTMLInputElement>) => {
+                            props.updateCheckbox(props.idList, task.id, event.currentTarget.checked);
+                        }
+
                         return (
                             <LiStyled key={task.id}>
-                                <input type={"checkbox"} checked={task.isCheck}/>
-                                <span>{task.title}</span>
-                                <Button onClick={delTask}>x</Button>
+                                <Checkbox checked={task.isCheck} onChange={onChangeInputHandler}/>
+                                <EditableTitle title={task.title} updateTitle={updateTaskTitle}/>
+                                <IconButton onClick={delTask}>
+                                    <Delete/>
+                                </IconButton>
                             </LiStyled>
                         )
                     })
@@ -81,37 +87,40 @@ export const ToDoList = (props: ToDoListPropsType) => {
             </ul>
 
             <div>
-                <Button isFilter={props.filter==="All"} onClick={onAllClickHandler}>All</Button>
-                <Button isFilter={props.filter==="Active"} onClick={onActiveClickHandler}>Active</Button>
-                <Button isFilter={props.filter==="Completed"} onClick={onCompletedClickHandler}>Completed</Button>
+                <Button
+                    color={"success"}
+                    variant={props.filter ==="All" ? "contained":"text" }
+                    onClick={onAllClickHandler}>All</Button>
+                <Button
+                    color={"primary"}
+                    variant={props.filter ==="Active" ? "contained":"text" }
+                    onClick={onActiveClickHandler}>Active</Button>
+                <Button
+                    color={"secondary"}
+                    variant={props.filter ==="Completed" ? "contained":"text" }
+                    onClick={onCompletedClickHandler}>Completed</Button>
             </div>
 
         </ToDoListStyled>
     );
-};
+}
 
 
 type ButtonPropsType = {
-    isFilter?:boolean
-}
-type InputPropsType = {
-    error: string
+    isFilter?: boolean
 }
 
 const ToDoListStyled = styled.div`
-  border: 1px solid black;
   padding: 15px;
+
+  ul {
+    padding: 0;
+  }
 `
+
 const Title = styled.h3`
 `
 const LiStyled = styled.li`
+  list-style-type: none;
 `
-const Input = styled.input<InputPropsType>`
-    border-color: ${props=>props.error? "red" :"black"};
-`
-const Button = styled.button<ButtonPropsType>`
-    background-color: ${props=>props.isFilter? "aquamarine" : "none"};
-`
-const ErrorText = styled.div`
-  color: red;
-`
+
