@@ -22,13 +22,13 @@ import {Menu} from "@mui/icons-material";
 
 export type FilterTypes = "All" | "Active" | "Completed";
 
-type ToDoListsDataType = {
+export type ToDoListsDataType = {
     id: string
     title: string
     filter: FilterTypes
 }
 
-type toDoListsTasksType = {
+export type toDoListsTasksType = {
     [key: string]: Array<TasksType>
 }
 
