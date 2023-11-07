@@ -1,6 +1,9 @@
 import React, {ChangeEvent} from 'react';
 import styled from "styled-components";
-import {FilterTypes} from "./ToDoLists";
+import {
+    FilterTypes,
+    toDoListsTasksType
+} from "./ToDoLists";
 import {InputAddItem} from "./InputAddItem";
 import {EditableTitle} from "./EditableTitle";
 import {
@@ -9,6 +12,17 @@ import {
     IconButton
 } from "@mui/material";
 import {Delete} from "@mui/icons-material";
+import {
+    useDispatch,
+    useSelector
+} from "react-redux";
+import {AppRootState} from "../state/store";
+import {
+    AddTaskAC,
+    DelTaskAC,
+    UpdateCheckboxTaskAC,
+    UpdateTaskTitleAC
+} from "../state/tasks-reducer";
 
 export type TasksType = {
     id: string
@@ -18,30 +32,42 @@ export type TasksType = {
 
 type ToDoListPropsType = {
     listTitle: string
-    tasks: Array<TasksType>
-    addTask: (idList: string, newTitleTask: string) => void
-    delTask: (idList: string, idTask: string) => void
     filterClick: (idList: string, filter: FilterTypes) => void
     idList: string
     filter: FilterTypes
     delList: (idList: string) => void
-    updateTaskTitle: (idList: string, idTask: string, newTitle: string) => void
     updateListTitle: (idList: string, newTitle: string) => void
-    updateCheckbox: (idList: string, idTask: string, isCheck: boolean) => void
 }
 
 export const ToDoList = (props: ToDoListPropsType) => {
+    const dispatch = useDispatch()
+    const toDoListsTasks = useSelector<AppRootState, toDoListsTasksType>(state => state.tasks)
+
+    let tasks;
+    switch (props.filter) {
+        case "Completed":
+            tasks = toDoListsTasks[props.idList].filter((task) => task.isCheck);
+            break;
+        case "Active":
+            tasks = toDoListsTasks[props.idList].filter((task) => !task.isCheck);
+            break;
+        case "All":
+            tasks = toDoListsTasks[props.idList];
+            break;
+    }
+
+
+
+    const addTask = (newTitleTask: string) => {
+        dispatch(AddTaskAC(props.idList, newTitleTask))
+    }
+
+
+
     const delList = () => props.delList(props.idList)
-
-
     const onAllClickHandler = () => props.filterClick(props.idList, "All");
     const onActiveClickHandler = () => props.filterClick(props.idList, "Active");
     const onCompletedClickHandler = () => props.filterClick(props.idList, "Completed");
-
-    const addTask = (titleTask: string) => {
-        props.addTask(props.idList, titleTask);
-    }
-
     const updateListTitle = (newTitle: string) => {
         props.updateListTitle(props.idList, newTitle)
     }
@@ -60,18 +86,12 @@ export const ToDoList = (props: ToDoListPropsType) => {
             <InputAddItem addItem={addTask}/>
             <ul>
                 {
-                    props.tasks.map((task) => {
-                        const delTask = () => {
-                            props.delTask(props.idList, task.id)
-                        }
+                    tasks.map((task) => {
+                        const delTask = () => dispatch(DelTaskAC(props.idList, task.id))
 
-                        const updateTaskTitle = (newTitle: string) => {
-                            props.updateTaskTitle(props.idList, task.id, newTitle)
-                        }
+                        const updateTaskTitle = (newTitle: string) => dispatch(UpdateTaskTitleAC(props.idList, task.id, newTitle))
 
-                        const onChangeInputHandler = (event: ChangeEvent<HTMLInputElement>) => {
-                            props.updateCheckbox(props.idList, task.id, event.currentTarget.checked);
-                        }
+                        const onChangeInputHandler = (event: ChangeEvent<HTMLInputElement>) => dispatch(UpdateCheckboxTaskAC(props.idList, task.id, event.currentTarget.checked))
 
                         return (
                             <LiStyled key={task.id}>
@@ -105,10 +125,6 @@ export const ToDoList = (props: ToDoListPropsType) => {
     );
 }
 
-
-type ButtonPropsType = {
-    isFilter?: boolean
-}
 
 const ToDoListStyled = styled.div`
   padding: 15px;

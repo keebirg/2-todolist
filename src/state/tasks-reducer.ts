@@ -4,7 +4,10 @@ import {
 import {v1} from "uuid";
 import {
     AddListActionType,
-    DelListActionType
+    DelListActionType,
+    idToDoList1,
+    idToDoList2,
+    idToDoList3
 } from "./todolists-reducer";
 
 
@@ -42,14 +45,31 @@ type actionType =
     | AddListActionType
     | DelListActionType
 
-export const taskReducer = (state: toDoListsTasksType, action: actionType): toDoListsTasksType => {
 
-    const startState = state
+let initialState: toDoListsTasksType = {
+    [idToDoList1]: [
+        {id: v1(), title: "js", isCheck: true},
+        {id: v1(), title: "HTML/CSS", isCheck: true},
+        {id: v1(), title: "REACT", isCheck: false},
+    ],
+    [idToDoList2]: [
+        {id: v1(), title: "js", isCheck: true},
+        {id: v1(), title: "HTML/CSS", isCheck: true},
+        {id: v1(), title: "REACT", isCheck: false},
+    ],
+    [idToDoList3]: [
+        {id: v1(), title: "js", isCheck: true},
+        {id: v1(), title: "HTML/CSS", isCheck: true},
+        {id: v1(), title: "REACT", isCheck: false},
+    ],
+}
+
+export const taskReducer = (state: toDoListsTasksType=initialState, action: actionType): toDoListsTasksType => {
 
     switch (action.type) {
 
         case'ADD-LIST': {
-            const newStartState = {...startState}
+            const newStartState = {...state}
 
             newStartState[action.idList] = [
                 {id: v1(), title: "js", isCheck: true},
@@ -60,20 +80,20 @@ export const taskReducer = (state: toDoListsTasksType, action: actionType): toDo
             return newStartState
         }
         case'DEL-LIST': {
-            const newStartState = {...startState}
+            const newStartState = {...state}
             delete newStartState[action.idList];
 
             return newStartState
         }
         case'ADD-TASK': {
             let newTask = {id: v1(), title: action.newTitleTask, isCheck: false};
-            const newStartState = {...startState, [action.idList]: [...startState[action.idList]]};
+            const newStartState = {...state, [action.idList]: [...state[action.idList]]};
             newStartState[action.idList].push(newTask);
 
             return newStartState
         }
         case'DEL-TASK': {
-            const newStartState = {...startState};
+            const newStartState = {...state};
             newStartState[action.idList] = newStartState[action.idList].filter(task => task.id !== action.idTask);
 
             return newStartState
@@ -81,7 +101,7 @@ export const taskReducer = (state: toDoListsTasksType, action: actionType): toDo
 
         case'UPDATE-TASK-TITLE': {
             const newStartState = {
-                ...startState, [action.idList]: startState[action.idList].map((task) => {
+                ...state, [action.idList]: state[action.idList].map((task) => {
                     return {...task}
                 })
             }
@@ -94,7 +114,7 @@ export const taskReducer = (state: toDoListsTasksType, action: actionType): toDo
 
         case'UPDATE-CHECKBOX-TASK': {
             const newStartState = {
-                ...startState, [action.idList]: startState[action.idList].map((task) => {
+                ...state, [action.idList]: state[action.idList].map((task) => {
                     return {...task}
                 })
             }
@@ -108,7 +128,7 @@ export const taskReducer = (state: toDoListsTasksType, action: actionType): toDo
 
 
         default:
-            throw new Error("Don't understand this type")
+            return state;
     }
 
 };
@@ -119,10 +139,10 @@ export const AddTaskAC = (idList: string, newTitleTask: string): AddTaskActionTy
 export const DelTaskAC = (idList: string, idTask: string): DelTaskActionType => {
     return {type: 'DEL-TASK', idList: idList, idTask: idTask}
 }
-export const UpdateTaskTitleAC = (newTitle: string, idList: string, idTask: string): UpdateTaskTitleActionType => {
+export const UpdateTaskTitleAC = (idList: string, idTask: string, newTitle: string): UpdateTaskTitleActionType => {
     return {type: 'UPDATE-TASK-TITLE', newTitle: newTitle, idList: idList, idTask: idTask}
 }
-export const UpdateCheckboxTaskAC = (isCheck: boolean, idList: string, idTask: string): UpdateCheckboxTaskActionType => {
+export const UpdateCheckboxTaskAC = (idList: string, idTask: string, isCheck: boolean): UpdateCheckboxTaskActionType => {
     return {type: 'UPDATE-CHECKBOX-TASK', isCheck: isCheck, idList: idList, idTask: idTask}
 }
 

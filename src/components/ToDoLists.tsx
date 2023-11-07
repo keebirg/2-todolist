@@ -1,5 +1,4 @@
-import React, {useState} from 'react';
-import {v1} from "uuid";
+import React from 'react';
 import {
     TasksType,
     ToDoList
@@ -18,6 +17,18 @@ import {
     Typography
 } from "@mui/material";
 import {Menu} from "@mui/icons-material";
+import {
+    useDispatch,
+    useSelector
+} from "react-redux";
+
+import {
+    AddListAC,
+    DelListAC,
+    UpdateFilterAC,
+    UpdateListTitleAC
+} from "../state/todolists-reducer";
+import {AppRootState} from "../state/store";
 
 
 export type FilterTypes = "All" | "Active" | "Completed";
@@ -34,98 +45,27 @@ export type toDoListsTasksType = {
 
 export const ToDoLists = () => {
 
-    const idToDoList1 = v1();
-    const idToDoList2 = v1();
-    const idToDoList3 = v1();
 
-    let [toDoListsPrimaryData, setToDoListsPrimaryData] = useState<Array<ToDoListsDataType>>([
-        {id: idToDoList1, title: "Job1", filter: "All"},
-        {id: idToDoList2, title: "Job2", filter: "Active"},
-        {id: idToDoList3, title: "Job3", filter: "Completed"},
-    ])
-
-    let [toDoListsTasks, setToDoListsTasks] = useState<toDoListsTasksType>({
-        [idToDoList1]: [
-            {id: v1(), title: "js", isCheck: true},
-            {id: v1(), title: "HTML/CSS", isCheck: true},
-            {id: v1(), title: "REACT", isCheck: false},
-        ],
-        [idToDoList2]: [
-            {id: v1(), title: "js", isCheck: true},
-            {id: v1(), title: "HTML/CSS", isCheck: true},
-            {id: v1(), title: "REACT", isCheck: false},
-        ],
-        [idToDoList3]: [
-            {id: v1(), title: "js", isCheck: true},
-            {id: v1(), title: "HTML/CSS", isCheck: true},
-            {id: v1(), title: "REACT", isCheck: false},
-        ],
-    })
-
-
-    const addTask = (idList: string, newTitleTask: string) => {
-        let newTask = {id: v1(), title: newTitleTask, isCheck: false};
-        toDoListsTasks[idList].push(newTask);
-        setToDoListsTasks({...toDoListsTasks});
-    }
-    const delTask = (idList: string, idTask: string) => {
-        toDoListsTasks[idList] = toDoListsTasks[idList].filter(task => task.id !== idTask);
-        setToDoListsTasks({...toDoListsTasks});
-    }
+    const dispatch = useDispatch()
+    const toDoListsPrimaryData = useSelector<AppRootState, Array<ToDoListsDataType>>(state => state.todolist)
 
     const filterClick = (idList: string, filter: FilterTypes) => {
-        toDoListsPrimaryData.map((data) => {
-            if (data.id === idList) data.filter = filter
-        })
-
-        setToDoListsPrimaryData([...toDoListsPrimaryData])
+        dispatch(UpdateFilterAC(idList, filter))
     }
 
     const delList = (idList: string) => {
-        toDoListsPrimaryData = toDoListsPrimaryData.filter((data) => data.id !== idList)
-        setToDoListsPrimaryData([...toDoListsPrimaryData])
-
-        delete toDoListsTasks[idList];
-        setToDoListsTasks({...toDoListsTasks})
+        dispatch(DelListAC(idList))
     }
 
     const addList = (titleList: string) => {
-        const idToDoList = v1();
-
-        toDoListsTasks[idToDoList] = [
-            {id: v1(), title: "js", isCheck: true},
-            {id: v1(), title: "HTML/CSS", isCheck: true},
-            {id: v1(), title: "REACT", isCheck: false},
-        ];
-        setToDoListsTasks({...toDoListsTasks});
-
-        toDoListsPrimaryData.push({id: idToDoList, title: titleList, filter: "All"});
-        setToDoListsPrimaryData([...toDoListsPrimaryData]);
-    }
-
-    const updateTaskTitle = (idList: string, idTask: string, newTitle: string) => {
-        toDoListsTasks[idList].map((task) => {
-            if (task.id === idTask) task.title = newTitle;
-        })
-
-        setToDoListsTasks({...toDoListsTasks})
+        dispatch(AddListAC(titleList))
     }
 
     const updateListTitle = (idList: string, newTitle: string) => {
-        toDoListsPrimaryData.map((list) => {
-            if (list.id === idList) list.title = newTitle;
-        })
-
-        setToDoListsPrimaryData([...toDoListsPrimaryData]);
+        dispatch(UpdateListTitleAC(idList, newTitle))
     }
 
-    const updateCheckbox = (idList: string, idTask: string, isCheck: boolean) => {
-        toDoListsTasks[idList].map((task) => {
-            if (task.id === idTask) task.isCheck = isCheck;
-        })
 
-        setToDoListsTasks({...toDoListsTasks})
-    }
 
     return (
         <ToDoListsStyled>
@@ -158,37 +98,17 @@ export const ToDoLists = () => {
 
                 <Grid gap={3} container>
                     {toDoListsPrimaryData.map((list) => {
-
-                        let tasks;
-                        switch (list.filter) {
-                            case "Completed":
-                                tasks = toDoListsTasks[list.id].filter((task) => task.isCheck);
-                                break;
-                            case "Active":
-                                tasks = toDoListsTasks[list.id].filter((task) => !task.isCheck);
-                                break;
-                            case "All":
-                                tasks = toDoListsTasks[list.id];
-                                break;
-                        }
-
                         return (
                             <Grid item>
                                 <Paper>
                                     <ToDoList
                                         filterClick={filterClick}
                                         idList={list.id}
-                                        addTask={addTask}
-                                        delTask={delTask}
                                         key={list.id}
                                         listTitle={list.title}
-                                        tasks={tasks}
                                         filter={list.filter}
                                         delList={delList}
-                                        updateTaskTitle={updateTaskTitle}
                                         updateListTitle={updateListTitle}
-                                        updateCheckbox={updateCheckbox}
-
                                     />
                                 </Paper>
                             </Grid>
@@ -202,7 +122,7 @@ export const ToDoLists = () => {
 };
 
 const ToDoListsStyled = styled.div`
-  
+
 
 `
 

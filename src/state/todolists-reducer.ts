@@ -2,15 +2,12 @@ import {
     FilterTypes,
     ToDoListsDataType,
 } from "../components/ToDoLists";
-
-
-
-
+import {v1} from "uuid";
 
 export type AddListActionType = {
     type: 'ADD-LIST'
     titleList: string
-    idList:string
+    idList: string
 }
 export type DelListActionType = {
     type: 'DEL-LIST'
@@ -36,7 +33,18 @@ type actionType =
     | UpdateListTitleActionType
 
 
-export const todolistsReducer = (state: Array<ToDoListsDataType>, action: actionType): Array<ToDoListsDataType> => {
+export const idToDoList1 = v1();
+export const idToDoList2 = v1();
+export const idToDoList3 = v1();
+
+let initialState: Array<ToDoListsDataType> = [
+    {id: idToDoList1, title: "Job1", filter: "All"},
+    {id: idToDoList2, title: "Job2", filter: "Active"},
+    {id: idToDoList3, title: "Job3", filter: "Completed"},
+]
+
+
+export const todolistsReducer = (state: Array<ToDoListsDataType> = initialState, action: actionType): Array<ToDoListsDataType> => {
 
     const startState = state
 
@@ -78,19 +86,20 @@ export const todolistsReducer = (state: Array<ToDoListsDataType>, action: action
             return newStartState
         }
         default:
-            throw new Error("Don't understand this type")
+            return state;
     }
 };
 
-export const AddListAC=(titleList:string, idToDoList:string):AddListActionType=>{
-    return {type:'ADD-LIST', titleList:titleList, idList:idToDoList}
+export const AddListAC = (titleList: string): AddListActionType => {
+    const idList = v1();
+    return {type: 'ADD-LIST', titleList: titleList, idList: idList}
 }
-export const DelListAC=(idList:string):DelListActionType=>{
-    return {type:'DEL-LIST', idList:idList}
+export const DelListAC = (idList: string): DelListActionType => {
+    return {type: 'DEL-LIST', idList: idList}
 }
-export const UpdateFilterAC=(filter:FilterTypes, idList:string):UpdateFilterActionType=>{
-    return {type:'FILTER-UPDATE', filter:filter, idList:idList}
+export const UpdateFilterAC = (idList: string, filter: FilterTypes): UpdateFilterActionType => {
+    return {type: 'FILTER-UPDATE', filter: filter, idList: idList}
 }
-export const UpdateListTitleAC=(newTitle:string, idList:string):UpdateListTitleActionType=>{
-    return {type:'UPDATE-LIST-TITLE', newTitle:newTitle, idList:idList}
+export const UpdateListTitleAC = (idList: string, newTitle: string): UpdateListTitleActionType => {
+    return {type: 'UPDATE-LIST-TITLE', newTitle: newTitle, idList: idList}
 }

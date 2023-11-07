@@ -52,7 +52,7 @@ test('correct todoList delTask', () => {
 
 
 test('correct todoList updateTaskTitle', () => {
-    const action=UpdateTaskTitleAC("AAA", idToDoList1, startState[idToDoList1][0].id)
+    const action=UpdateTaskTitleAC( idToDoList1, startState[idToDoList1][0].id, "AAA")
     const endState= taskReducer(startState, action)
 
     expect(endState[idToDoList1][0].title).toBe("AAA")
@@ -61,7 +61,7 @@ test('correct todoList updateTaskTitle', () => {
 
 
 test('correct todoList updateCheckboxTask', () => {
-    const action=UpdateCheckboxTaskAC(false, idToDoList1, startState[idToDoList1][0].id)
+    const action=UpdateCheckboxTaskAC(idToDoList1, startState[idToDoList1][0].id, false)
     const endState = taskReducer(startState, action)
 
     expect(endState[idToDoList1][0].isCheck).toBe(false)

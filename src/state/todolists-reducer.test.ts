@@ -19,7 +19,7 @@ const startState: Array<ToDoListsDataType> = [
 
 
 test('correct todoList filterUpdate', () => {
-    const action=UpdateFilterAC("Active", idToDoList1)
+    const action=UpdateFilterAC(idToDoList1, "Active" )
     const endState = todolistsReducer(startState, action)
 
     expect(endState[0].filter).toBe("Active")
@@ -27,7 +27,7 @@ test('correct todoList filterUpdate', () => {
 });
 
 test('correct todoList updateListTitle', () => {
-    const action=UpdateListTitleAC("AAA", idToDoList1)
+    const action=UpdateListTitleAC(idToDoList1, "AAA" )
     const endState = todolistsReducer(startState, action)
 
     expect(endState[0].title).toBe("AAA")

@@ -35,8 +35,7 @@ const startStateTasks: toDoListsTasksType = {
 
 test('correct todoList addList', () => {
 
-    const idList = v1();
-    const action = AddListAC('AAA', idList)
+    const action = AddListAC('AAA')
 
     const endStateList = todolistsReducer(startStateList, action)
     const endStateTask = taskReducer(startStateTasks, action)
