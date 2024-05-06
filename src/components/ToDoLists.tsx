@@ -1,6 +1,5 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {
-    TasksType,
     ToDoList
 } from "./ToDoList";
 import styled from "styled-components";
@@ -29,6 +28,7 @@ import {
     UpdateListTitleAC
 } from "../state/todolists-reducer";
 import {AppRootState} from "../state/store";
+import {toDoListsTasksType} from "../state/tasks-reducer";
 
 
 export type FilterTypes = "All" | "Active" | "Completed";
@@ -39,32 +39,34 @@ export type ToDoListsDataType = {
     filter: FilterTypes
 }
 
-export type toDoListsTasksType = {
-    [key: string]: Array<TasksType>
-}
 
-export const ToDoLists = () => {
+export const ToDoLists = React.memo(() => {
 
+    console.log('print ToDoLists')
 
     const dispatch = useDispatch()
     const toDoListsPrimaryData = useSelector<AppRootState, Array<ToDoListsDataType>>(state => state.todolist)
+    const toDoListsTasks = useSelector<AppRootState, toDoListsTasksType>(state => state.tasks)
 
-    const filterClick = (idList: string, filter: FilterTypes) => {
-        dispatch(UpdateFilterAC(idList, filter))
-    }
+    const filterClick = useCallback(
+        (idList: string, filter: FilterTypes) => {
+            dispatch(UpdateFilterAC(idList, filter))
+        }, [dispatch])
 
-    const delList = (idList: string) => {
-        dispatch(DelListAC(idList))
-    }
+    const delList = useCallback(
+        (idList: string) => {
+            dispatch(DelListAC(idList))
+        }, [dispatch])
 
-    const addList = (titleList: string) => {
-        dispatch(AddListAC(titleList))
-    }
+    const addList = useCallback(
+        (titleList: string) => {
+            dispatch(AddListAC(titleList))
+        }, [dispatch])
 
-    const updateListTitle = (idList: string, newTitle: string) => {
-        dispatch(UpdateListTitleAC(idList, newTitle))
-    }
-
+    const updateListTitle = useCallback(
+        (idList: string, newTitle: string) => {
+            dispatch(UpdateListTitleAC(idList, newTitle))
+        }, [dispatch])
 
 
     return (
@@ -99,9 +101,10 @@ export const ToDoLists = () => {
                 <Grid gap={3} container>
                     {toDoListsPrimaryData.map((list) => {
                         return (
-                            <Grid item>
+                            <Grid key={list.id}>
                                 <Paper>
                                     <ToDoList
+                                        toDoListsTasks={toDoListsTasks[list.id]}
                                         filterClick={filterClick}
                                         idList={list.id}
                                         key={list.id}
@@ -119,7 +122,7 @@ export const ToDoLists = () => {
             </Container>
         </ToDoListsStyled>
     );
-};
+});
 
 const ToDoListsStyled = styled.div`
 

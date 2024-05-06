@@ -3,7 +3,9 @@ import {ToDoLists} from "./components/ToDoLists";
 import styled from "styled-components";
 
 
+
 function App() {
+
     return (
         <AppStyled>
             <ToDoLists/>
@@ -15,6 +17,4 @@ export default App;
 
 const AppStyled = styled.div`
   height: 100vh;
-
-  
 `

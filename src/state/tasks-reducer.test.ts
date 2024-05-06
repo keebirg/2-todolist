@@ -1,11 +1,8 @@
 import {v1} from "uuid";
 import {
-    toDoListsTasksType
-} from "../components/ToDoLists";
-import {
     AddTaskAC,
     DelTaskAC,
-    taskReducer,
+    taskReducer, toDoListsTasksType,
     UpdateCheckboxTaskAC,
     UpdateTaskTitleAC
 } from "./tasks-reducer";

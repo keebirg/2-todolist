@@ -1,10 +1,9 @@
 import React, {
-    ChangeEvent,
+    ChangeEvent, useCallback,
     useState
 } from 'react';
 import styled from "styled-components";
 import {
-    Button,
     IconButton,
     TextField
 } from "@mui/material";
@@ -14,20 +13,31 @@ type InputAddItemPropsType = {
     addItem: (title: string) => void
 }
 
-export const InputAddItem = (props: InputAddItemPropsType) => {
+
+
+
+export const InputAddItem = React.memo((props: InputAddItemPropsType) => {
+
+    console.log('print InputAddItem')
+
     let [newTitleTask, setNeTitleTask] = useState('');
     let [error, setError] = useState('');
 
-    const onNewTitleChangeHandler = (event: ChangeEvent<HTMLInputElement>) => setNeTitleTask(event.currentTarget.value)
-    const addItem = () => {
+    const onNewTitleChangeHandler =useCallback ( (event: ChangeEvent<HTMLInputElement>) => {
+        setNeTitleTask(event.currentTarget.value)
+    },[])
+    const addItem = useCallback (() => {
         if (!newTitleTask.trim()) {
             setError("Title is required");
             return;
         }
         props.addItem(newTitleTask);
         setNeTitleTask('')
-    }
-    const onKeyPressHandler = () => setError('');
+    },[props.addItem, newTitleTask])
+
+    const onKeyPressHandler = useCallback (() => {
+        if (error) setError('');
+    }, [error])
 
     return (
         <InputAddItemStyled>
@@ -41,13 +51,13 @@ export const InputAddItem = (props: InputAddItemPropsType) => {
                 label="Type value"
                 variant="outlined"/>
 
-            <IconButton  onClick={addItem}>
+            <IconButton onClick={addItem}>
                 <Add/>
             </IconButton>
 
         </InputAddItemStyled>
     );
-};
+});
 
 type InputPropsType = {
     error: string

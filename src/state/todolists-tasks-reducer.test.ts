@@ -1,14 +1,13 @@
 import {v1} from "uuid";
 import {
     ToDoListsDataType,
-    toDoListsTasksType
 } from "../components/ToDoLists";
 import {
     AddListAC,
     DelListAC,
     todolistsReducer
 } from "./todolists-reducer";
-import {taskReducer} from "./tasks-reducer";
+import {taskReducer, toDoListsTasksType} from "./tasks-reducer";
 
 const idToDoList1 = v1();
 const idToDoList2 = v1();

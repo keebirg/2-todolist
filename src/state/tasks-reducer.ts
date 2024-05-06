@@ -1,6 +1,3 @@
-import {
-    toDoListsTasksType
-} from "../components/ToDoLists";
 import {v1} from "uuid";
 import {
     AddListActionType,
@@ -9,6 +6,7 @@ import {
     idToDoList2,
     idToDoList3
 } from "./todolists-reducer";
+
 
 
 type AddTaskActionType = {
@@ -45,6 +43,15 @@ type actionType =
     | AddListActionType
     | DelListActionType
 
+export type TaskType = {
+    id: string
+    title: string
+    isCheck: boolean
+}
+
+export type toDoListsTasksType = {
+    [key: string]: Array<TaskType>
+}
 
 let initialState: toDoListsTasksType = {
     [idToDoList1]: [
@@ -118,7 +125,6 @@ export const taskReducer = (state: toDoListsTasksType=initialState, action: acti
                     return {...task}
                 })
             }
-
             newStartState[action.idList].map((task) => {
                 if (task.id === action.idTask) task.isCheck = action.isCheck;
             })
