@@ -71,7 +71,7 @@ let initialState: toDoListsTasksType = {
     ],
 }
 
-export const taskReducer = (state: toDoListsTasksType=initialState, action: actionType): toDoListsTasksType => {
+export const tasksReducer = (state: toDoListsTasksType=initialState, action: actionType): toDoListsTasksType => {
 
     switch (action.type) {
 

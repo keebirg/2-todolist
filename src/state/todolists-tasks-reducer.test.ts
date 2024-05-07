@@ -7,7 +7,7 @@ import {
     DelListAC,
     todolistsReducer
 } from "./todolists-reducer";
-import {taskReducer, toDoListsTasksType} from "./tasks-reducer";
+import {tasksReducer, toDoListsTasksType} from "./tasks-reducer";
 
 const idToDoList1 = v1();
 const idToDoList2 = v1();
@@ -37,7 +37,7 @@ test('correct todoList addList', () => {
     const action = AddListAC('AAA')
 
     const endStateList = todolistsReducer(startStateList, action)
-    const endStateTask = taskReducer(startStateTasks, action)
+    const endStateTask = tasksReducer(startStateTasks, action)
 
     expect(endStateList.length).toBe(3);
     expect(Object.keys(endStateTask).length).toBe(3);
@@ -49,7 +49,7 @@ test('correct todoList delList', () => {
     const action= DelListAC(idToDoList1)
 
     const endStateList = todolistsReducer(startStateList, action)
-    const endStateTask = taskReducer(startStateTasks, action)
+    const endStateTask = tasksReducer(startStateTasks, action)
 
 
     expect(endStateList.length).toBe(1);

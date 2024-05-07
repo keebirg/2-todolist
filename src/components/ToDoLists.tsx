@@ -45,7 +45,7 @@ export const ToDoLists = React.memo(() => {
     console.log('print ToDoLists')
 
     const dispatch = useDispatch()
-    const toDoListsPrimaryData = useSelector<AppRootState, Array<ToDoListsDataType>>(state => state.todolist)
+    const toDoListsPrimaryData = useSelector<AppRootState, Array<ToDoListsDataType>>(state => state.todolists)
     const toDoListsTasks = useSelector<AppRootState, toDoListsTasksType>(state => state.tasks)
 
     const filterClick = useCallback(

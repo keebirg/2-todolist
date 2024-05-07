@@ -2,7 +2,7 @@ import {v1} from "uuid";
 import {
     AddTaskAC,
     DelTaskAC,
-    taskReducer, toDoListsTasksType,
+    tasksReducer, toDoListsTasksType,
     UpdateCheckboxTaskAC,
     UpdateTaskTitleAC
 } from "./tasks-reducer";
@@ -28,7 +28,7 @@ const startState: toDoListsTasksType = {
 
 test('correct todoList addTask', () => {
     const action=AddTaskAC(idToDoList1, 'AAA')
-    const endState= taskReducer(startState, action)
+    const endState= tasksReducer(startState, action)
 
     expect(Object.keys(endState).length).toBe(2);
     expect(endState[idToDoList1].length).toBe(4);
@@ -38,7 +38,7 @@ test('correct todoList addTask', () => {
 
 test('correct todoList delTask', () => {
     const action=DelTaskAC(idToDoList1, startState[idToDoList1][0].id)
-    const endState= taskReducer(startState, action)
+    const endState= tasksReducer(startState, action)
 
     expect(startState[idToDoList1][0].title).toBe("js")
     expect(Object.keys(endState).length).toBe(2);
@@ -50,7 +50,7 @@ test('correct todoList delTask', () => {
 
 test('correct todoList updateTaskTitle', () => {
     const action=UpdateTaskTitleAC( idToDoList1, startState[idToDoList1][0].id, "AAA")
-    const endState= taskReducer(startState, action)
+    const endState= tasksReducer(startState, action)
 
     expect(endState[idToDoList1][0].title).toBe("AAA")
 });
@@ -59,7 +59,7 @@ test('correct todoList updateTaskTitle', () => {
 
 test('correct todoList updateCheckboxTask', () => {
     const action=UpdateCheckboxTaskAC(idToDoList1, startState[idToDoList1][0].id, false)
-    const endState = taskReducer(startState, action)
+    const endState = tasksReducer(startState, action)
 
     expect(endState[idToDoList1][0].isCheck).toBe(false)
 });

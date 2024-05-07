@@ -9,27 +9,29 @@ import styled from "styled-components";
 type TaskPropsType = {
     task: TaskType
     idList: string
+    delTask:(idTask:string)=>void
+    updateTaskTitle:(newTitle: string, idTask:string)=>void
+    onChangeCheckBox:(event: ChangeEvent<HTMLInputElement>, idTask:string)=>void
 }
 export const Task = (props: TaskPropsType) => {
-    const dispatch = useDispatch()
 
-    const delTask =useCallback( () => {
-        dispatch(DelTaskAC(props.idList, props.task.id))
-    },[dispatch,props.idList, props.task.id])
+    const onChangeCheckBoxHandler=(event:ChangeEvent<HTMLInputElement>)=>{
+        props.onChangeCheckBox(event, props.task.id)
+    }
 
-    const updateTaskTitle =useCallback( (newTitle: string) => {
-        dispatch(UpdateTaskTitleAC(props.idList, props.task.id, newTitle))
-    },[dispatch, props.idList, props.task.id])
+    const updateTitleHandler=(newTitle: string)=>{
+        props.updateTaskTitle(newTitle, props.task.id)
+    }
 
-    const onChangeInputHandler =useCallback( (event: ChangeEvent<HTMLInputElement>) => {
-        dispatch(UpdateCheckboxTaskAC(props.idList, props.task.id, event.currentTarget.checked))
-    }, [dispatch, props.idList, props.task.id])
+    const delTaskHandler=()=>{
+        props.delTask(props.task.id)
+    }
 
     return (
         <LiStyled key={props.task.id}>
-            <Checkbox checked={props.task.isCheck} onChange={onChangeInputHandler}/>
-            <EditableTitle title={props.task.title} updateTitle={updateTaskTitle}/>
-            <IconButton onClick={delTask}>
+            <Checkbox checked={props.task.isCheck} onChange={onChangeCheckBoxHandler}/>
+            <EditableTitle title={props.task.title} updateTitle={updateTitleHandler}/>
+            <IconButton onClick={delTaskHandler}>
                 <Delete/>
             </IconButton>
         </LiStyled>

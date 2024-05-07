@@ -51,25 +51,20 @@ export const InputAddItem = React.memo((props: InputAddItemPropsType) => {
                 label="Type value"
                 variant="outlined"/>
 
-            <IconButton onClick={addItem}>
-                <Add/>
-            </IconButton>
+            <IconButtonStyled>
+                <IconButton onClick={addItem}>
+                    <Add/>
+                </IconButton>
+            </IconButtonStyled>
+
 
         </InputAddItemStyled>
     );
 });
 
-type InputPropsType = {
-    error: string
-}
-
 const InputAddItemStyled = styled.div`
-
+display: flex;
 `
-
-const Input = styled.input<InputPropsType>`
-  border-color: ${props => props.error ? "red" : "black"};
-`
-const ErrorText = styled.div`
-  color: red;
+const IconButtonStyled = styled.div`
+  display: flex;
 `

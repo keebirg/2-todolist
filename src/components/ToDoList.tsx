@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {ChangeEvent, useCallback} from 'react';
 import styled from "styled-components";
 import {FilterTypes} from "./ToDoLists";
 import {InputAddItem} from "./InputAddItem";
@@ -6,7 +6,7 @@ import {EditableTitle} from "./EditableTitle";
 import {Button, IconButton} from "@mui/material";
 import {Delete} from "@mui/icons-material";
 import {useDispatch} from "react-redux";
-import {AddTaskAC, TaskType} from "../state/tasks-reducer";
+import {AddTaskAC, DelTaskAC, TaskType, UpdateCheckboxTaskAC, UpdateTaskTitleAC} from "../state/tasks-reducer";
 import {Task} from "./Task";
 
 
@@ -53,6 +53,18 @@ export const ToDoList = React.memo((props: ToDoListPropsType) => {
         }, [props.updateListTitle, props.idList])
 
 
+    const delTask =useCallback( (idTask:string) => {
+        dispatch(DelTaskAC(props.idList, idTask))
+    },[dispatch, props.idList])
+
+    const updateTaskTitle =useCallback( (newTitle: string, idTask:string) => {
+        dispatch(UpdateTaskTitleAC(props.idList, idTask, newTitle))
+    },[dispatch, props.idList])
+
+    const onChangeCheckBox =useCallback( (event: ChangeEvent<HTMLInputElement>, idTask:string) => {
+        dispatch(UpdateCheckboxTaskAC(props.idList, idTask, event.currentTarget.checked))
+    }, [dispatch, props.idList])
+
     return (
         <ToDoListStyled>
 
@@ -67,7 +79,13 @@ export const ToDoList = React.memo((props: ToDoListPropsType) => {
             <ul>
                 {
                     tasks.map((task) => {
-                        return <Task idList={props.idList} task={task} key={task.id}/>
+                        return <Task
+                            idList={props.idList}
+                            task={task}
+                            key={task.id}
+                            delTask={delTask}
+                            onChangeCheckBox={onChangeCheckBox}
+                            updateTaskTitle={updateTaskTitle}/>
                     })
                 }
             </ul>
