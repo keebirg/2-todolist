@@ -1,8 +1,9 @@
 import {
-    FilterTypes,
     ToDoListsDataType,
-} from "../components/ToDoLists";
+} from "../components/toDoLists/ToDoLists";
 import {v1} from "uuid";
+
+export type FilterTypes = "All" | "Active" | "Completed";
 
 export type AddListActionType = {
     type: 'ADD-LIST'

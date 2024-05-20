@@ -1,9 +1,9 @@
-import React, {useCallback} from 'react';
+import React from 'react';
 import {
     ToDoList
-} from "./ToDoList";
+} from "../toDoList/ToDoList";
 import styled from "styled-components";
-import {InputAddItem} from "./InputAddItem";
+import {InputAddItem} from "../inputAddItem/InputAddItem";
 import {
     AppBar,
     Box,
@@ -16,22 +16,17 @@ import {
     Typography
 } from "@mui/material";
 import {Menu} from "@mui/icons-material";
-import {
-    useDispatch,
-    useSelector
-} from "react-redux";
+
 
 import {
-    AddListAC,
-    DelListAC,
-    UpdateFilterAC,
-    UpdateListTitleAC
-} from "../state/todolists-reducer";
-import {AppRootState} from "../state/store";
-import {toDoListsTasksType} from "../state/tasks-reducer";
+ FilterTypes,
+
+} from "../../state/todolists-reducer";
+
+import {useToDoLists} from "./useToDoLists";
 
 
-export type FilterTypes = "All" | "Active" | "Completed";
+
 
 export type ToDoListsDataType = {
     id: string
@@ -44,29 +39,10 @@ export const ToDoLists = React.memo(() => {
 
     console.log('print ToDoLists')
 
-    const dispatch = useDispatch()
-    const toDoListsPrimaryData = useSelector<AppRootState, Array<ToDoListsDataType>>(state => state.todolists)
-    const toDoListsTasks = useSelector<AppRootState, toDoListsTasksType>(state => state.tasks)
-
-    const filterClick = useCallback(
-        (idList: string, filter: FilterTypes) => {
-            dispatch(UpdateFilterAC(idList, filter))
-        }, [dispatch])
-
-    const delList = useCallback(
-        (idList: string) => {
-            dispatch(DelListAC(idList))
-        }, [dispatch])
-
-    const addList = useCallback(
-        (titleList: string) => {
-            dispatch(AddListAC(titleList))
-        }, [dispatch])
-
-    const updateListTitle = useCallback(
-        (idList: string, newTitle: string) => {
-            dispatch(UpdateListTitleAC(idList, newTitle))
-        }, [dispatch])
+    const {
+        toDoListsPrimaryData,
+        toDoListsTasks,
+        addList}=useToDoLists();
 
 
     return (
@@ -105,13 +81,10 @@ export const ToDoLists = React.memo(() => {
                                 <Paper>
                                     <ToDoList
                                         toDoListsTasks={toDoListsTasks[list.id]}
-                                        filterClick={filterClick}
+                                        listTitle={list.title}
                                         idList={list.id}
                                         key={list.id}
-                                        listTitle={list.title}
                                         filter={list.filter}
-                                        delList={delList}
-                                        updateListTitle={updateListTitle}
                                     />
                                 </Paper>
                             </Grid>

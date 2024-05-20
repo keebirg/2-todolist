@@ -1,7 +1,7 @@
 import {v1} from "uuid";
 import {
     ToDoListsDataType,
-} from "../components/ToDoLists";
+} from "../components/toDoLists/ToDoLists";
 import {
     AddListAC,
     DelListAC,

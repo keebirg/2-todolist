@@ -6,7 +6,7 @@ import {
 } from "./todolists-reducer";
 import {
     ToDoListsDataType,
-} from "../components/ToDoLists";
+} from "../components/toDoLists/ToDoLists";
 
 
 const idToDoList1 = v1();

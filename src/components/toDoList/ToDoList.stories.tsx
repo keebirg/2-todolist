@@ -1,9 +1,5 @@
 import type {Meta, StoryObj} from '@storybook/react';
-import {action} from "@storybook/addon-actions";
-import {ToDoLists} from "./ToDoLists";
-import {ReduxStoreProviderDecorator} from "../stories/decorators/ReduxStoreProviderDecorator";
-import {FilterTypes} from "./ToDoLists";
-import {TaskType} from "../state/tasks-reducer";
+import {ReduxStoreProviderDecorator} from "../../stories/decorators/ReduxStoreProviderDecorator";
 import {ToDoList} from "./ToDoList";
 
 const meta: Meta<typeof ToDoList> = {
@@ -15,11 +11,11 @@ const meta: Meta<typeof ToDoList> = {
 
     args: {
         listTitle: 'string',
-        filterClick: action('filterClick'),
+        // filterClick: action('filterClick'),
         idList: 'string',
         filter: 'All',
-        delList: action('delList'),
-        updateListTitle: action('updateListTitle'),
+        // delList: action('delList'),
+        // updateListTitle: action('updateListTitle'),
         toDoListsTasks: [{id: '1', title: 'css', isCheck: false}],
     }
 

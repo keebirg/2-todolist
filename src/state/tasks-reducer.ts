@@ -8,7 +8,6 @@ import {
 } from "./todolists-reducer";
 
 
-
 type AddTaskActionType = {
     type: 'ADD-TASK'
     idList: string
@@ -71,7 +70,7 @@ let initialState: toDoListsTasksType = {
     ],
 }
 
-export const tasksReducer = (state: toDoListsTasksType=initialState, action: actionType): toDoListsTasksType => {
+export const tasksReducer = (state: toDoListsTasksType = initialState, action: actionType): toDoListsTasksType => {
 
     switch (action.type) {
 
@@ -120,14 +119,20 @@ export const tasksReducer = (state: toDoListsTasksType=initialState, action: act
         }
 
         case'UPDATE-CHECKBOX-TASK': {
+            // const newStartState = {
+            //     ...state, [action.idList]: state[action.idList].map((task) => {
+            //         return {...task}
+            //     })
+            // }
+            // newStartState[action.idList].map((task) => {
+            //     if (task.id === action.idTask) task.isCheck = action.isCheck;
+            // })
             const newStartState = {
                 ...state, [action.idList]: state[action.idList].map((task) => {
-                    return {...task}
+                    if (task.id != action.idTask) return task
+                    else return {...task, isCheck:action.isCheck}
                 })
             }
-            newStartState[action.idList].map((task) => {
-                if (task.id === action.idTask) task.isCheck = action.isCheck;
-            })
 
             return newStartState
         }
