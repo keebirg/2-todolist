@@ -1,9 +1,11 @@
-import {
-    ToDoListsDataType,
-} from "../components/toDoLists/ToDoLists";
 import {v1} from "uuid";
+import {ToDoListType} from "../api/toDoLists-api";
 
 export type FilterTypes = "All" | "Active" | "Completed";
+
+export type ToDoListsDataType =ToDoListType & {
+    filter: FilterTypes
+}
 
 export type AddListActionType = {
     type: 'ADD-LIST'
@@ -39,9 +41,9 @@ export const idToDoList2 = v1();
 export const idToDoList3 = v1();
 
 let initialState: Array<ToDoListsDataType> = [
-    {id: idToDoList1, title: "Job1", filter: "All"},
-    {id: idToDoList2, title: "Job2", filter: "Active"},
-    {id: idToDoList3, title: "Job3", filter: "Completed"},
+    {id: idToDoList1, title: "Job1", filter: "All", addedDate:"", order: 0},
+    {id: idToDoList2, title: "Job2", filter: "Active", addedDate:"", order: 0},
+    {id: idToDoList3, title: "Job3", filter: "Completed", addedDate:"", order: 0},
 ]
 
 
@@ -53,7 +55,7 @@ export const todolistsReducer = (state: Array<ToDoListsDataType> = initialState,
         case'ADD-LIST': {
             const newStartState = [...startState]
 
-            newStartState.push({id: action.idList, title: action.titleList, filter: "All"});
+            newStartState.push({id: action.idList, title: action.titleList, filter: "All", addedDate:"", order: 0});
 
             return newStartState
         }

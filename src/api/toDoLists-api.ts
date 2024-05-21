@@ -1,39 +1,53 @@
 import axios from "axios";
 
-const settings = {
+
+const instance=axios.create({
+    baseURL:"https://social-network.samuraijs.com/api/1.1/",
     withCredentials: true,
     headers: {
         'API-KEY': '6f86b70c-d3ce-46fc-9255-2dc0a7f5ea99'
     }
-}
+})
 
-export type GetResponseToDoListType = {
+export type ToDoListType = {
     id: string
     addedDate: string
     order: number
     title: string
 };
 
-export  type ItemsTaskType = {
+export enum TaskStatus{
+    New,
+    InProgress,
+    Completed,
+    Draft
+}
+
+export enum TaskPriority{
+    Low,
+    Middle,
+    Hi,
+    Urgently,
+    Later
+}
+
+export  type TaskType = {
         id: string
         title: string
         description: string
         todoListId: string
         order: number
-        status: number
-        priority: number
+        status: TaskStatus
+        priority: TaskPriority
         startDate: string
         deadline: string
         addedDate: string
 }
 
 export type GetResponseTaskType = {
-
-    items: Array<ItemsTaskType>
-
+    items: Array<TaskType>
     totalCount: number
     error: string
-
 }
 
 export type ResponseType<D> = {
@@ -43,47 +57,47 @@ export type ResponseType<D> = {
     data: D
 }
 
-export type CreateResponseToDoListType = ResponseType<{ item: GetResponseToDoListType }>
+export type CreateResponseToDoListType = ResponseType<{ item: ToDoListType }>
 export type DeleteResponseToDoListType = ResponseType<{}>
 export type UpdateResponseToDoListType = ResponseType<{}>
 
 export type DeleteResponseTaskType = ResponseType<{}>
-export type UpdateResponseTaskType = ResponseType<{ item: ItemsTaskType }>
-export type CreateResponseTaskType = ResponseType<{ item: ItemsTaskType }>
+export type UpdateResponseTaskType = ResponseType<{ item: TaskType }>
+export type CreateResponseTaskType = ResponseType<{ item: TaskType }>
 
 
 export const toDoListsAPI = {
     getToDoLists() {
-        return axios.get<Array<GetResponseToDoListType>>('https://social-network.samuraijs.com/api/1.1/todo-lists', settings)
+        return instance.get<Array<ToDoListType>>('todo-lists')
     },
 
     createToDoLists(title: string) {
-        return axios.post<CreateResponseToDoListType>('https://social-network.samuraijs.com/api/1.1/todo-lists', {title}, settings)
+        return instance.post<CreateResponseToDoListType>('todo-lists', {title})
     },
 
     deleteToDoLists(id: string) {
-        return axios.delete<DeleteResponseToDoListType>(`https://social-network.samuraijs.com/api/1.1/todo-lists/${id}`, settings)
+        return instance.delete<DeleteResponseToDoListType>(`todo-lists/${id}`)
     },
 
     updateToDoLists(id: string, title: string) {
-        return axios.put<UpdateResponseToDoListType>(`https://social-network.samuraijs.com/api/1.1/todo-lists/${id}`, {title}, settings)
+        return instance.put<UpdateResponseToDoListType>(`todo-lists/${id}`, {title})
     },
 
 
     getTasks(idToDoLost: string) {
-        return axios.get<GetResponseTaskType>(`https://social-network.samuraijs.com/api/1.1/todo-lists/${idToDoLost}/tasks`, settings)
+        return instance.get<GetResponseTaskType>(`todo-lists/${idToDoLost}/tasks`)
     },
 
     createTasks(idToDoLost: string, title: string) {
-        return axios.post<CreateResponseTaskType>(`https://social-network.samuraijs.com/api/1.1/todo-lists/${idToDoLost}/tasks`, {title}, settings)
+        return instance.post<CreateResponseTaskType>(`todo-lists/${idToDoLost}/tasks`, {title})
     },
 
     deleteTasks(idToDoLost: string, idTask: string) {
-        return axios.delete<DeleteResponseTaskType>(`https://social-network.samuraijs.com/api/1.1/todo-lists/${idToDoLost}/tasks/${idTask}`, settings)
+        return instance.delete<DeleteResponseTaskType>(`todo-lists/${idToDoLost}/tasks/${idTask}`)
     },
 
     updateTasks(idToDoLost: string, idTask: string, title: string) {
-        return axios.put<UpdateResponseTaskType>(`https://social-network.samuraijs.com/api/1.1/todo-lists/${idToDoLost}/tasks/${idTask}`, {title}, settings)
+        return instance.put<UpdateResponseTaskType>(`todo-lists/${idToDoLost}/tasks/${idTask}`, {title})
     },
 
 }

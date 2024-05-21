@@ -70,6 +70,7 @@
     "@storybook/react-webpack5": "^8.0.10",
     "@storybook/test": "^8.0.10",
     "@types/uuid": "^9.0.3",
+    "babel-core": "^7.0.0-bridge.0",
     "eslint-plugin-storybook": "^0.8.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",

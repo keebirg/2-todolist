@@ -1,7 +1,8 @@
 import {useDispatch} from "react-redux";
-import {ChangeEvent, useCallback} from "react";
-import {AddTaskAC, DelTaskAC, TaskType, UpdateCheckboxTaskAC, UpdateTaskTitleAC} from "../../state/tasks-reducer";
+import {useCallback} from "react";
+import {AddTaskAC} from "../../state/tasks-reducer";
 import {DelListAC, FilterTypes, UpdateFilterAC, UpdateListTitleAC} from "../../state/todolists-reducer";
+import {TaskStatus, TaskType} from "../../api/toDoLists-api";
 
 export const useToDoList=(idList:string, filter:FilterTypes, toDoListsTasks:Array<TaskType>)=>{
 
@@ -10,10 +11,10 @@ export const useToDoList=(idList:string, filter:FilterTypes, toDoListsTasks:Arra
     let tasks;
     switch (filter) {
         case "Completed":
-            tasks = toDoListsTasks.filter((task) => task.isCheck);
+            tasks = toDoListsTasks.filter((task) => task.status==TaskStatus.Completed);
             break;
         case "Active":
-            tasks = toDoListsTasks.filter((task) => !task.isCheck);
+            tasks = toDoListsTasks.filter((task) => task.status==TaskStatus.New);
             break;
         case "All":
             tasks = toDoListsTasks;

@@ -1,11 +1,11 @@
-import {useDispatch} from "react-redux";
-import {DelTaskAC, TaskType, UpdateCheckboxTaskAC, UpdateTaskTitleAC} from "../../state/tasks-reducer";
-import React, {ChangeEvent, useCallback} from "react";
+
+import React from "react";
 import {Checkbox, IconButton} from "@mui/material";
 import {EditableTitle} from "../editable/EditableTitle";
 import {Delete} from "@mui/icons-material";
 import styled from "styled-components";
 import {useTask} from "./useTask";
+import {TaskStatus, TaskType} from "../../api/toDoLists-api";
 
 type TaskPropsType = {
     task: TaskType
@@ -22,7 +22,7 @@ export const Task = React.memo( (props: TaskPropsType) => {
 
     return (
         <LiStyled key={props.task.id}>
-            <Checkbox checked={props.task.isCheck} onChange={onChangeCheckBox}/>
+            <Checkbox checked={props.task.status==TaskStatus.Completed} onChange={onChangeCheckBox}/>
             <EditableTitle title={props.task.title} updateTitle={updateTaskTitle}/>
             <IconButton onClick={delTask}>
                 <Delete/>

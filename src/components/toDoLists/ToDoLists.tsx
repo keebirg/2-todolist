@@ -18,21 +18,8 @@ import {
 import {Menu} from "@mui/icons-material";
 
 
-import {
- FilterTypes,
-
-} from "../../state/todolists-reducer";
-
 import {useToDoLists} from "./useToDoLists";
 
-
-
-
-export type ToDoListsDataType = {
-    id: string
-    title: string
-    filter: FilterTypes
-}
 
 
 export const ToDoLists = React.memo(() => {

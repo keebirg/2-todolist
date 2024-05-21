@@ -2,25 +2,26 @@ import {v1} from "uuid";
 import {
     AddTaskAC,
     DelTaskAC,
-    tasksReducer, toDoListsTasksType,
+    tasksReducer, ToDoListTasksType,
     UpdateCheckboxTaskAC,
     UpdateTaskTitleAC
 } from "./tasks-reducer";
+import {TaskPriority, TaskStatus} from "../api/toDoLists-api";
 
 
 const idToDoList1 = v1();
 const idToDoList2 = v1();
 
-const startState: toDoListsTasksType = {
+const startState: ToDoListTasksType = {
     [idToDoList1]: [
-        {id: v1(), title: "js", isCheck: true},
-        {id: v1(), title: "HTML/CSS", isCheck: true},
-        {id: v1(), title: "REACT", isCheck: false},
+        {todoListId: idToDoList1, id: v1(), title: "js", status: TaskStatus.Completed, addedDate:'', deadline:'', order:0, startDate:'', description:'', priority:TaskPriority.Low },
+        {todoListId: idToDoList1, id: v1(), title: "HTML", status: TaskStatus.Completed, addedDate:'', deadline:'', order:0, startDate:'', description:'', priority:TaskPriority.Low },
+        {todoListId: idToDoList1, id: v1(), title: "REACT", status: TaskStatus.New, addedDate:'', deadline:'', order:0, startDate:'', description:'', priority:TaskPriority.Low },
     ],
     [idToDoList2]: [
-        {id: v1(), title: "js", isCheck: true},
-        {id: v1(), title: "HTML/CSS", isCheck: true},
-        {id: v1(), title: "REACT", isCheck: false},
+        {todoListId: idToDoList2, id: v1(), title: "js", status: TaskStatus.Completed, addedDate:'', deadline:'', order:0, startDate:'', description:'', priority:TaskPriority.Low },
+        {todoListId: idToDoList2, id: v1(), title: "HTML", status: TaskStatus.Completed, addedDate:'', deadline:'', order:0, startDate:'', description:'', priority:TaskPriority.Low },
+        {todoListId: idToDoList2, id: v1(), title: "REACT", status: TaskStatus.New, addedDate:'', deadline:'', order:0, startDate:'', description:'', priority:TaskPriority.Low },
     ],
 }
 
@@ -58,10 +59,10 @@ test('correct todoList updateTaskTitle', () => {
 
 
 test('correct todoList updateCheckboxTask', () => {
-    const action=UpdateCheckboxTaskAC(idToDoList1, startState[idToDoList1][0].id, false)
+    const action=UpdateCheckboxTaskAC(idToDoList1, startState[idToDoList1][0].id, TaskStatus.New)
     const endState = tasksReducer(startState, action)
 
-    expect(endState[idToDoList1][0].isCheck).toBe(false)
+    expect(endState[idToDoList1][0].status).toBe(TaskStatus.New)
 });
 
 
@@ -72,5 +73,5 @@ test('correct start data', () => {
     expect(startState[idToDoList2].length).toBe(3)
     expect(startState[idToDoList1][0].title).toBe("js")
     expect(startState[idToDoList1][1].title).toBe("HTML/CSS")
-    expect(startState[idToDoList1][0].isCheck).toBe(true)
+    expect(startState[idToDoList1][0].status).toBe(TaskStatus.Completed)
 });

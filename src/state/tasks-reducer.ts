@@ -6,6 +6,7 @@ import {
     idToDoList2,
     idToDoList3
 } from "./todolists-reducer";
+import {TaskPriority, TaskStatus, TaskType} from "../api/toDoLists-api";
 
 
 type AddTaskActionType = {
@@ -30,7 +31,7 @@ type UpdateCheckboxTaskActionType = {
     type: 'UPDATE-CHECKBOX-TASK'
     idList: string
     idTask: string
-    isCheck: boolean
+    status: TaskStatus
 }
 
 
@@ -42,35 +43,30 @@ type actionType =
     | AddListActionType
     | DelListActionType
 
-export type TaskType = {
-    id: string
-    title: string
-    isCheck: boolean
-}
 
-export type toDoListsTasksType = {
+export type ToDoListTasksType = {
     [key: string]: Array<TaskType>
 }
 
-let initialState: toDoListsTasksType = {
+let initialState: ToDoListTasksType = {
     [idToDoList1]: [
-        {id: v1(), title: "js", isCheck: true},
-        {id: v1(), title: "HTML/CSS", isCheck: true},
-        {id: v1(), title: "REACT", isCheck: false},
+        {todoListId: idToDoList1, id: v1(), title: "js", status: TaskStatus.Completed, addedDate:'', deadline:'', order:0, startDate:'', description:'', priority:TaskPriority.Low },
+        {todoListId: idToDoList1, id: v1(), title: "HTML", status: TaskStatus.Completed, addedDate:'', deadline:'', order:0, startDate:'', description:'', priority:TaskPriority.Low },
+        {todoListId: idToDoList1, id: v1(), title: "REACT", status: TaskStatus.New, addedDate:'', deadline:'', order:0, startDate:'', description:'', priority:TaskPriority.Low },
     ],
     [idToDoList2]: [
-        {id: v1(), title: "js", isCheck: true},
-        {id: v1(), title: "HTML/CSS", isCheck: true},
-        {id: v1(), title: "REACT", isCheck: false},
+        {todoListId: idToDoList2, id: v1(), title: "js", status: TaskStatus.Completed, addedDate:'', deadline:'', order:0, startDate:'', description:'', priority:TaskPriority.Low },
+        {todoListId: idToDoList2, id: v1(), title: "HTML", status: TaskStatus.Completed, addedDate:'', deadline:'', order:0, startDate:'', description:'', priority:TaskPriority.Low },
+        {todoListId: idToDoList2, id: v1(), title: "REACT", status: TaskStatus.New, addedDate:'', deadline:'', order:0, startDate:'', description:'', priority:TaskPriority.Low },
     ],
     [idToDoList3]: [
-        {id: v1(), title: "js", isCheck: true},
-        {id: v1(), title: "HTML/CSS", isCheck: true},
-        {id: v1(), title: "REACT", isCheck: false},
+        {todoListId: idToDoList3, id: v1(), title: "js", status: TaskStatus.Completed, addedDate:'', deadline:'', order:0, startDate:'', description:'', priority:TaskPriority.Low },
+        {todoListId: idToDoList3, id: v1(), title: "HTML", status: TaskStatus.Completed, addedDate:'', deadline:'', order:0, startDate:'', description:'', priority:TaskPriority.Low },
+        {todoListId: idToDoList3, id: v1(), title: "REACT", status: TaskStatus.New, addedDate:'', deadline:'', order:0, startDate:'', description:'', priority:TaskPriority.Low },
     ],
 }
 
-export const tasksReducer = (state: toDoListsTasksType = initialState, action: actionType): toDoListsTasksType => {
+export const tasksReducer = (state: ToDoListTasksType = initialState, action: actionType): ToDoListTasksType => {
 
     switch (action.type) {
 
@@ -78,9 +74,9 @@ export const tasksReducer = (state: toDoListsTasksType = initialState, action: a
             const newStartState = {...state}
 
             newStartState[action.idList] = [
-                {id: v1(), title: "js", isCheck: true},
-                {id: v1(), title: "HTML/CSS", isCheck: true},
-                {id: v1(), title: "REACT", isCheck: false},
+                {todoListId: action.idList, id: v1(), title: "js", status: TaskStatus.Completed, addedDate:'', deadline:'', order:0, startDate:'', description:'', priority:TaskPriority.Low },
+                {todoListId: action.idList, id: v1(), title: "HTML", status: TaskStatus.Completed, addedDate:'', deadline:'', order:0, startDate:'', description:'', priority:TaskPriority.Low },
+                {todoListId: action.idList, id: v1(), title: "REACT", status: TaskStatus.New, addedDate:'', deadline:'', order:0, startDate:'', description:'', priority:TaskPriority.Low },
             ];
 
             return newStartState
@@ -92,7 +88,7 @@ export const tasksReducer = (state: toDoListsTasksType = initialState, action: a
             return newStartState
         }
         case'ADD-TASK': {
-            let newTask = {id: v1(), title: action.newTitleTask, isCheck: false};
+            let newTask = {todoListId: action.idList, id: v1(), title: action.newTitleTask, status: TaskStatus.Completed, addedDate:'', deadline:'', order:0, startDate:'', description:'', priority:TaskPriority.Low };
             const newStartState = {...state, [action.idList]: [...state[action.idList]]};
             newStartState[action.idList].push(newTask);
 
@@ -130,7 +126,7 @@ export const tasksReducer = (state: toDoListsTasksType = initialState, action: a
             const newStartState = {
                 ...state, [action.idList]: state[action.idList].map((task) => {
                     if (task.id != action.idTask) return task
-                    else return {...task, isCheck:action.isCheck}
+                    else return {...task, status:action.status}
                 })
             }
 
@@ -153,8 +149,8 @@ export const DelTaskAC = (idList: string, idTask: string): DelTaskActionType => 
 export const UpdateTaskTitleAC = (idList: string, idTask: string, newTitle: string): UpdateTaskTitleActionType => {
     return {type: 'UPDATE-TASK-TITLE', newTitle: newTitle, idList: idList, idTask: idTask}
 }
-export const UpdateCheckboxTaskAC = (idList: string, idTask: string, isCheck: boolean): UpdateCheckboxTaskActionType => {
-    return {type: 'UPDATE-CHECKBOX-TASK', isCheck: isCheck, idList: idList, idTask: idTask}
+export const UpdateCheckboxTaskAC = (idList: string, idTask: string, status: TaskStatus): UpdateCheckboxTaskActionType => {
+    return {type: 'UPDATE-CHECKBOX-TASK', status: status, idList: idList, idTask: idTask}
 }
 
 

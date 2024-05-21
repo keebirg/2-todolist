@@ -4,10 +4,10 @@ import {InputAddItem} from "../inputAddItem/InputAddItem";
 import {EditableTitle} from "../editable/EditableTitle";
 import {Button, IconButton} from "@mui/material";
 import {Delete} from "@mui/icons-material";
-import {TaskType} from "../../state/tasks-reducer";
 import {Task} from "../task/Task";
 import {useToDoList} from "./useToDoList";
 import {FilterTypes} from "../../state/todolists-reducer";
+import {TaskType} from "../../api/toDoLists-api";
 
 
 

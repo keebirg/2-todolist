@@ -3,7 +3,7 @@ import {
     CreateResponseTaskType,
     CreateResponseToDoListType, DeleteResponseTaskType,
     DeleteResponseToDoListType, GetResponseTaskType,
-    GetResponseToDoListType,
+    ToDoListType,
     toDoListsAPI, UpdateResponseTaskType,
     UpdateResponseToDoListType
 } from "./toDoLists-api";
@@ -15,7 +15,7 @@ export default {
 
 
 export const GetToDoLists = () => {
-    const [state, setState] = useState<Array<GetResponseToDoListType>>();
+    const [state, setState] = useState<Array<ToDoListType>>();
 
     const getToDoLists = () => {
         toDoListsAPI.getToDoLists()
@@ -52,7 +52,7 @@ export const CreateToDoList = () => {
 export const DeleteToDoList = () => {
     const [state, setState] = useState<DeleteResponseToDoListType>();
     const [id, setId] = useState("")
-    const [selectData, setSelectData] = useState<Array<GetResponseToDoListType>>([])
+    const [selectData, setSelectData] = useState<Array<ToDoListType>>([])
 
     useEffect(() => {
         toDoListsAPI.getToDoLists()
@@ -94,7 +94,7 @@ export const DeleteToDoList = () => {
 export const UpdateToDoList = () => {
     const [state, setState] = useState<UpdateResponseToDoListType>();
     const [id, setId] = useState("")
-    const [selectData, setSelectData] = useState<Array<GetResponseToDoListType>>([])
+    const [selectData, setSelectData] = useState<Array<ToDoListType>>([])
     const [title, setTitle] = useState("")
 
     useEffect(() => {
@@ -140,7 +140,7 @@ export const UpdateToDoList = () => {
 export const GetTasks = () => {
     const [state, setState] = useState<any>();
     const [idToDoList, setIdToDoList] = useState<string>("")
-    const [selectDataToDoList, setSelectDataToDoList] = useState<Array<GetResponseToDoListType>>([])
+    const [selectDataToDoList, setSelectDataToDoList] = useState<Array<ToDoListType>>([])
 
     useEffect(() => {
         toDoListsAPI.getToDoLists()
@@ -182,7 +182,7 @@ export const GetTasks = () => {
 export const CreateTask = () => {
     const [state, setState] = useState<CreateResponseTaskType>();
     const [idToDoList, setIdToDoList] = useState<string>("")
-    const [selectDataToDoLists, setSelectDataToDoLists] = useState<Array<GetResponseToDoListType>>([])
+    const [selectDataToDoLists, setSelectDataToDoLists] = useState<Array<ToDoListType>>([])
     const [title, setTitle] = useState('')
 
     useEffect(() => {
@@ -231,7 +231,7 @@ export const DeleteTask = () => {
     const [state, setState] = useState<DeleteResponseTaskType>();
     const [idToDoList, setIdToDoList] = useState<string>("")
     const [idTask, setIdTask] = useState<string>("")
-    const [selectDataToDoLists, setSelectDataToDoLists] = useState<Array<GetResponseToDoListType>>([])
+    const [selectDataToDoLists, setSelectDataToDoLists] = useState<Array<ToDoListType>>([])
     const [selectDataTasks, setSelectDataTasks] = useState<GetResponseTaskType>()
     const [active, setActive]=useState(false)
 
@@ -316,7 +316,7 @@ export const UpdateTask = () => {
     const [state, setState] = useState<UpdateResponseTaskType>();
     const [idToDoList, setIdToDoList] = useState<string>("")
     const [idTask, setIdTask] = useState<string>("")
-    const [selectDataToDoLists, setSelectDataToDoLists] = useState<Array<GetResponseToDoListType>>([])
+    const [selectDataToDoLists, setSelectDataToDoLists] = useState<Array<ToDoListType>>([])
     const [selectDataTasks, setSelectDataTasks] = useState<GetResponseTaskType>()
     const [active, setActive]=useState(false)
     const [title, setTitle]=useState('')

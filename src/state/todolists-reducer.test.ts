@@ -1,20 +1,19 @@
 import {v1} from "uuid";
 import {
+    ToDoListsDataType,
     todolistsReducer,
     UpdateFilterAC,
     UpdateListTitleAC
 } from "./todolists-reducer";
-import {
-    ToDoListsDataType,
-} from "../components/toDoLists/ToDoLists";
+
 
 
 const idToDoList1 = v1();
 const idToDoList2 = v1();
 
 const startState: Array<ToDoListsDataType> = [
-    {id: idToDoList1, title: "Job1", filter: "All"},
-    {id: idToDoList2, title: "Job2", filter: "Active"},
+    {id: idToDoList1, title: "Job1", filter: "All", addedDate:"", order: 0},
+    {id: idToDoList2, title: "Job2", filter: "Active", addedDate:"", order: 0},
 ]
 
 
