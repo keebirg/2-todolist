@@ -9,7 +9,7 @@ const instance=axios.create({
     }
 })
 
-export type ToDoListType = {
+export type ToDoListServerType = {
     id: string
     addedDate: string
     order: number
@@ -57,7 +57,13 @@ export type ResponseType<D> = {
     data: D
 }
 
-export type CreateResponseToDoListType = ResponseType<{ item: ToDoListType }>
+export type DataToUpdateType={
+    title: string
+    status: TaskStatus
+    priority: TaskPriority
+}
+
+export type CreateResponseToDoListType = ResponseType<{ item: ToDoListServerType }>
 export type DeleteResponseToDoListType = ResponseType<{}>
 export type UpdateResponseToDoListType = ResponseType<{}>
 
@@ -68,18 +74,18 @@ export type CreateResponseTaskType = ResponseType<{ item: TaskType }>
 
 export const toDoListsAPI = {
     getToDoLists() {
-        return instance.get<Array<ToDoListType>>('todo-lists')
+        return instance.get<Array<ToDoListServerType>>('todo-lists')
     },
 
-    createToDoLists(title: string) {
+    createToDoList(title: string) {
         return instance.post<CreateResponseToDoListType>('todo-lists', {title})
     },
 
-    deleteToDoLists(id: string) {
+    deleteToDoList(id: string) {
         return instance.delete<DeleteResponseToDoListType>(`todo-lists/${id}`)
     },
 
-    updateToDoLists(id: string, title: string) {
+    updateToDoList(id: string, title: string) {
         return instance.put<UpdateResponseToDoListType>(`todo-lists/${id}`, {title})
     },
 
@@ -88,16 +94,16 @@ export const toDoListsAPI = {
         return instance.get<GetResponseTaskType>(`todo-lists/${idToDoLost}/tasks`)
     },
 
-    createTasks(idToDoLost: string, title: string) {
+    createTask(idToDoLost: string, title: string) {
         return instance.post<CreateResponseTaskType>(`todo-lists/${idToDoLost}/tasks`, {title})
     },
 
-    deleteTasks(idToDoLost: string, idTask: string) {
+    deleteTask(idToDoLost: string, idTask: string) {
         return instance.delete<DeleteResponseTaskType>(`todo-lists/${idToDoLost}/tasks/${idTask}`)
     },
 
-    updateTasks(idToDoLost: string, idTask: string, title: string) {
-        return instance.put<UpdateResponseTaskType>(`todo-lists/${idToDoLost}/tasks/${idTask}`, {title})
+    updateTask(idToDoLost: string, idTask: string, DataToUpdate: DataToUpdateType) {
+        return instance.put<UpdateResponseTaskType>(`todo-lists/${idToDoLost}/tasks/${idTask}`, DataToUpdate)
     },
 
 }

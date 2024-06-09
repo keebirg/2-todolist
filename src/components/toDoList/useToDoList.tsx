@@ -1,12 +1,24 @@
 import {useDispatch} from "react-redux";
-import {useCallback} from "react";
-import {AddTaskAC} from "../../state/tasks-reducer";
-import {DelListAC, FilterTypes, UpdateFilterAC, UpdateListTitleAC} from "../../state/todolists-reducer";
+import {useCallback, useEffect} from "react";
+import {AddTaskAC, addTaskTC, fetchTaskTC} from "../../state/tasks-reducer";
+import {
+    DelListAC,
+    delToDoListTC,
+    FilterTypes,
+    UpdateFilterAC,
+    UpdateListTitleAC,
+    updateToDoListTC
+} from "../../state/todolists-reducer";
 import {TaskStatus, TaskType} from "../../api/toDoLists-api";
+import {AppThunkDispatch} from "../../state/store";
 
 export const useToDoList=(idList:string, filter:FilterTypes, toDoListsTasks:Array<TaskType>)=>{
 
-    const dispatch = useDispatch()
+    const dispatch: AppThunkDispatch = useDispatch()
+
+    useEffect(()=>{
+        dispatch(fetchTaskTC(idList))
+    },[])
 
     let tasks;
     switch (filter) {
@@ -22,7 +34,7 @@ export const useToDoList=(idList:string, filter:FilterTypes, toDoListsTasks:Arra
     }
 
     const addTask = useCallback((newTitleTask: string) => {
-        dispatch(AddTaskAC(idList, newTitleTask))
+        dispatch(addTaskTC(idList, newTitleTask))
     }, [dispatch])
 
     const filterClick = useCallback(
@@ -32,12 +44,12 @@ export const useToDoList=(idList:string, filter:FilterTypes, toDoListsTasks:Arra
 
     const delList = useCallback(
         () => {
-            dispatch(DelListAC(idList))
+            dispatch(delToDoListTC(idList))
         }, [dispatch])
 
     const updateListTitle = useCallback(
         (newTitle: string) => {
-            dispatch(UpdateListTitleAC(idList, newTitle))
+            dispatch(updateToDoListTC(idList, newTitle))
         }, [dispatch])
 
     const onAllClickHandler = useCallback(() => filterClick( "All"), []);

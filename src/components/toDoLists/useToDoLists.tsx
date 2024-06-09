@@ -1,22 +1,27 @@
 import {useDispatch, useSelector} from "react-redux";
-import {AppRootState} from "../../state/store";
-import {useCallback} from "react";
+import {AppRootState, AppThunkDispatch} from "../../state/store";
+import {useCallback, useEffect} from "react";
 import {
-    AddListAC,
-    ToDoListsDataType,
+    AddListAC, addToDoListTC, fetchToDoListsTC,
+    ToDoListAppType,
 } from "../../state/todolists-reducer";
 import {ToDoListTasksType} from "../../state/tasks-reducer";
 
+
 export const useToDoLists=()=>{
-    const dispatch = useDispatch()
-    const toDoListsPrimaryData = useSelector<AppRootState, Array<ToDoListsDataType>>(state => state.todolists)
+    const dispatch: AppThunkDispatch = useDispatch();
+    const toDoListsPrimaryData = useSelector<AppRootState, Array<ToDoListAppType>>(state => state.todolists)
     const toDoListsTasks = useSelector<AppRootState, ToDoListTasksType>(state => state.tasks)
 
+
+    useEffect(()=>{
+        dispatch(fetchToDoListsTC())
+    },[])
 
 
     const addList = useCallback(
         (titleList: string) => {
-            dispatch(AddListAC(titleList))
+            dispatch(addToDoListTC(titleList))
         }, [dispatch])
 
 

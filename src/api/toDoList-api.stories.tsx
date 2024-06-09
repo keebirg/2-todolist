@@ -3,9 +3,9 @@ import {
     CreateResponseTaskType,
     CreateResponseToDoListType, DeleteResponseTaskType,
     DeleteResponseToDoListType, GetResponseTaskType,
-    ToDoListType,
+    ToDoListServerType,
     toDoListsAPI, UpdateResponseTaskType,
-    UpdateResponseToDoListType
+    UpdateResponseToDoListType, DataToUpdateType, TaskStatus, TaskPriority
 } from "./toDoLists-api";
 import {v1} from "uuid";
 
@@ -15,7 +15,7 @@ export default {
 
 
 export const GetToDoLists = () => {
-    const [state, setState] = useState<Array<ToDoListType>>();
+    const [state, setState] = useState<Array<ToDoListServerType>>();
 
     const getToDoLists = () => {
         toDoListsAPI.getToDoLists()
@@ -35,7 +35,7 @@ export const CreateToDoList = () => {
     const [title, setTitle] = useState("")
 
     const createToDoLists = () => {
-        toDoListsAPI.createToDoLists(title)
+        toDoListsAPI.createToDoList(title)
             .then((res) => {
                 setState(res.data)
             })
@@ -52,7 +52,7 @@ export const CreateToDoList = () => {
 export const DeleteToDoList = () => {
     const [state, setState] = useState<DeleteResponseToDoListType>();
     const [id, setId] = useState("")
-    const [selectData, setSelectData] = useState<Array<ToDoListType>>([])
+    const [selectData, setSelectData] = useState<Array<ToDoListServerType>>([])
 
     useEffect(() => {
         toDoListsAPI.getToDoLists()
@@ -63,7 +63,7 @@ export const DeleteToDoList = () => {
     }, [state])
 
     const deleteToDoLists = () => {
-        toDoListsAPI.deleteToDoLists(id)
+        toDoListsAPI.deleteToDoList(id)
             .then((res) => {
                 setState(res.data)
             })
@@ -94,7 +94,7 @@ export const DeleteToDoList = () => {
 export const UpdateToDoList = () => {
     const [state, setState] = useState<UpdateResponseToDoListType>();
     const [id, setId] = useState("")
-    const [selectData, setSelectData] = useState<Array<ToDoListType>>([])
+    const [selectData, setSelectData] = useState<Array<ToDoListServerType>>([])
     const [title, setTitle] = useState("")
 
     useEffect(() => {
@@ -106,7 +106,7 @@ export const UpdateToDoList = () => {
     }, [state])
 
     const updateToDoLists = () => {
-        toDoListsAPI.updateToDoLists(id, title)
+        toDoListsAPI.updateToDoList(id, title)
             .then((res) => {
                 setState(res.data)
                 setTitle("")
@@ -140,7 +140,7 @@ export const UpdateToDoList = () => {
 export const GetTasks = () => {
     const [state, setState] = useState<any>();
     const [idToDoList, setIdToDoList] = useState<string>("")
-    const [selectDataToDoList, setSelectDataToDoList] = useState<Array<ToDoListType>>([])
+    const [selectDataToDoList, setSelectDataToDoList] = useState<Array<ToDoListServerType>>([])
 
     useEffect(() => {
         toDoListsAPI.getToDoLists()
@@ -166,7 +166,7 @@ export const GetTasks = () => {
         }}>
             {selectDataToDoList.map((item, index) => {
                 return <option key={v1()} value={item.id}>
-                    {index}
+                    {item.title}
                 </option>
             })}
 
@@ -182,7 +182,7 @@ export const GetTasks = () => {
 export const CreateTask = () => {
     const [state, setState] = useState<CreateResponseTaskType>();
     const [idToDoList, setIdToDoList] = useState<string>("")
-    const [selectDataToDoLists, setSelectDataToDoLists] = useState<Array<ToDoListType>>([])
+    const [selectDataToDoLists, setSelectDataToDoLists] = useState<Array<ToDoListServerType>>([])
     const [title, setTitle] = useState('')
 
     useEffect(() => {
@@ -198,7 +198,7 @@ export const CreateTask = () => {
 
     const createTasks = () => {
         if (idToDoList) {
-            toDoListsAPI.createTasks(idToDoList, title)
+            toDoListsAPI.createTask(idToDoList, title)
                 .then((res) => {
                     setState(res.data)
                 })
@@ -213,7 +213,7 @@ export const CreateTask = () => {
         }}>
             {selectDataToDoLists.map((item, index) => {
                 return <option key={v1()} value={item.id}>
-                    {index}
+                    {item.title}
                 </option>
             })}
 
@@ -231,7 +231,7 @@ export const DeleteTask = () => {
     const [state, setState] = useState<DeleteResponseTaskType>();
     const [idToDoList, setIdToDoList] = useState<string>("")
     const [idTask, setIdTask] = useState<string>("")
-    const [selectDataToDoLists, setSelectDataToDoLists] = useState<Array<ToDoListType>>([])
+    const [selectDataToDoLists, setSelectDataToDoLists] = useState<Array<ToDoListServerType>>([])
     const [selectDataTasks, setSelectDataTasks] = useState<GetResponseTaskType>()
     const [active, setActive]=useState(false)
 
@@ -270,7 +270,7 @@ export const DeleteTask = () => {
     const deleteTasks = () => {
         if (idToDoList && idTask) {
             setActive(true)
-            toDoListsAPI.deleteTasks(idToDoList, idTask)
+            toDoListsAPI.deleteTask(idToDoList, idTask)
                 .then((res) => {
                     setState(res.data)
                     setActive(false)
@@ -286,7 +286,7 @@ export const DeleteTask = () => {
         }}>
             {selectDataToDoLists.map((item, index) => {
                 return <option key={v1()} value={item.id}>
-                    {index}
+                    {item.title}
                 </option>
             })}
 
@@ -297,7 +297,7 @@ export const DeleteTask = () => {
         }}>
             {selectDataTasks?.items.map((item, index) => {
                 return <option key={v1()} value={item.id}>
-                    {index}
+                    {item.title}
                 </option>
             })}
 
@@ -316,7 +316,7 @@ export const UpdateTask = () => {
     const [state, setState] = useState<UpdateResponseTaskType>();
     const [idToDoList, setIdToDoList] = useState<string>("")
     const [idTask, setIdTask] = useState<string>("")
-    const [selectDataToDoLists, setSelectDataToDoLists] = useState<Array<ToDoListType>>([])
+    const [selectDataToDoLists, setSelectDataToDoLists] = useState<Array<ToDoListServerType>>([])
     const [selectDataTasks, setSelectDataTasks] = useState<GetResponseTaskType>()
     const [active, setActive]=useState(false)
     const [title, setTitle]=useState('')
@@ -353,10 +353,17 @@ export const UpdateTask = () => {
     }, [idToDoList, state]);
 
 
-    const updateTasks = () => {
+    const updateTitleTasks = () => {
         if (idToDoList && idTask) {
             setActive(true)
-            toDoListsAPI.updateTasks(idToDoList, idTask, title)
+
+            const task=selectDataTasks?.items.find((task)=>task.id===idTask)
+            const DataToUpdate:DataToUpdateType={
+                title: title,
+                status: task?.status || TaskStatus.New,
+                priority: task?.priority || TaskPriority.Low
+            }
+            toDoListsAPI.updateTask(idToDoList, idTask, DataToUpdate)
                 .then((res) => {
                     setState(res.data)
                     setActive(false)
@@ -373,7 +380,7 @@ export const UpdateTask = () => {
         }}>
             {selectDataToDoLists.map((item, index) => {
                 return <option key={v1()} value={item.id}>
-                    {index}
+                    {item.title}
                 </option>
             })}
 
@@ -384,7 +391,7 @@ export const UpdateTask = () => {
         }}>
             {selectDataTasks?.items.map((item, index) => {
                 return <option key={v1()} value={item.id}>
-                    {index}
+                    {item.title}
                 </option>
             })}
 
@@ -394,7 +401,7 @@ export const UpdateTask = () => {
         <button
             disabled={active}
             style={{display: 'block'}}
-            onClick={updateTasks}
+            onClick={updateTitleTasks}
         > update Tasks
         </button>
     </div>

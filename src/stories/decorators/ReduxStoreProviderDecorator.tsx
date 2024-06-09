@@ -1,7 +1,7 @@
 import React from 'react'
 import { Provider } from 'react-redux';
 import {AppRootState} from "../../state/store";
-import {combineReducers, legacy_createStore} from "redux";
+import {combineReducers,  legacy_createStore} from "redux";
 import {idToDoList1, idToDoList2, todolistsReducer} from "../../state/todolists-reducer";
 import {tasksReducer} from "../../state/tasks-reducer";
 import {v1} from "uuid";
@@ -32,7 +32,7 @@ const initialGlobalState:AppRootState = {
     }
 };
 
-export const storyBookStore = legacy_createStore(rootReducer, initialGlobalState);
+export const storyBookStore = legacy_createStore(rootReducer);
 
 export const ReduxStoreProviderDecorator = (storyFn: () => React.ReactNode) => {
     return <Provider store={storyBookStore}>{storyFn()}</Provider>

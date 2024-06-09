@@ -1,23 +1,33 @@
-import {ChangeEvent, useCallback} from "react";
-import {DelTaskAC, UpdateCheckboxTaskAC, UpdateTaskTitleAC} from "../../state/tasks-reducer";
+import {ChangeEvent, useCallback, useEffect} from "react";
+import {
+    DelTaskAC,
+    delTaskTC,
+    fetchTaskTC,
+    UpdateCheckboxTaskAC,
+    updateTitleTaskTC,
+    UpdateTaskTitleAC, updateStatusTaskTC
+} from "../../state/tasks-reducer";
 import {useDispatch} from "react-redux";
 import {TaskStatus} from "../../api/toDoLists-api";
+import {AppThunkDispatch} from "../../state/store";
+
 
 export const useTask = (idList: string, idTask: string) => {
 
-    const dispatch = useDispatch()
+    const dispatch: AppThunkDispatch = useDispatch();
+
 
 
     const delTask = useCallback(() => {
-        dispatch(DelTaskAC(idList, idTask))
+        dispatch(delTaskTC(idList, idTask))
     }, [dispatch])
 
     const updateTaskTitle = useCallback((newTitle: string) => {
-        dispatch(UpdateTaskTitleAC(idList, idTask, newTitle))
+        dispatch(updateTitleTaskTC(idList, idTask, newTitle))
     }, [dispatch])
 
     const onChangeCheckBox = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-        dispatch(UpdateCheckboxTaskAC(idList, idTask, event.currentTarget.checked ? TaskStatus.Completed : TaskStatus.New))
+        dispatch(updateStatusTaskTC(idList, idTask, event.currentTarget.checked ? TaskStatus.Completed : TaskStatus.New))
     }, [dispatch])
 
     return {
