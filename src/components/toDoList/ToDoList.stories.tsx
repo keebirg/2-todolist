@@ -18,7 +18,7 @@ const meta: Meta<typeof ToDoList> = {
         filter: 'All',
         // delList: action('delList'),
         // updateListTitle: action('updateListTitle'),
-        toDoListsTasks: [{todoListId: "idToDoList1", id: v1(), title: "js", status: TaskStatus.Completed, addedDate:'', deadline:'', order:0, startDate:'', description:'', priority:TaskPriority.Low }],
+        toDoListsTasks: [{todoListId: "idToDoList1", id: v1(), title: "js", status: TaskStatus.Completed, addedDate:'', deadline:'', order:0, startDate:'', description:'', priority:TaskPriority.Low, disabled:false }],
     }
 
 };

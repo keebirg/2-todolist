@@ -1,7 +1,4 @@
-import React, {
-    ChangeEvent, useCallback,
-    useState
-} from 'react';
+import React from 'react';
 import styled from "styled-components";
 import {
     IconButton,
@@ -12,6 +9,7 @@ import {useInputAddItem} from "./useInputAddItem";
 
 type InputAddItemPropsType = {
     addItem: (title: string) => void
+    disabled?:boolean
 }
 
 
@@ -39,10 +37,11 @@ export const InputAddItem = React.memo((props: InputAddItemPropsType) => {
                 onKeyPress={onKeyPress}
                 error={!!error}
                 label="Type value"
-                variant="outlined"/>
+                variant="outlined"
+                disabled={props.disabled}/>
 
             <IconButtonStyled>
-                <IconButton onClick={onAddItem}>
+                <IconButton onClick={onAddItem} disabled={props.disabled}>
                     <Add/>
                 </IconButton>
             </IconButtonStyled>

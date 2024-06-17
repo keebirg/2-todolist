@@ -31,7 +31,7 @@ export enum TaskPriority{
     Later
 }
 
-export  type TaskType = {
+export  type TaskTypeAPI = {
         id: string
         title: string
         description: string
@@ -45,7 +45,7 @@ export  type TaskType = {
 }
 
 export type GetResponseTaskType = {
-    items: Array<TaskType>
+    items: Array<TaskTypeAPI>
     totalCount: number
     error: string
 }
@@ -68,8 +68,8 @@ export type DeleteResponseToDoListType = ResponseType<{}>
 export type UpdateResponseToDoListType = ResponseType<{}>
 
 export type DeleteResponseTaskType = ResponseType<{}>
-export type UpdateResponseTaskType = ResponseType<{ item: TaskType }>
-export type CreateResponseTaskType = ResponseType<{ item: TaskType }>
+export type UpdateResponseTaskType = ResponseType<{ item: TaskTypeAPI }>
+export type CreateResponseTaskType = ResponseType<{ item: TaskTypeAPI }>
 
 
 export const toDoListsAPI = {

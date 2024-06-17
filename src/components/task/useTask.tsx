@@ -1,11 +1,8 @@
-import {ChangeEvent, useCallback, useEffect} from "react";
+import {ChangeEvent, useCallback} from "react";
 import {
-    DelTaskAC,
     delTaskTC,
-    fetchTaskTC,
-    UpdateCheckboxTaskAC,
     updateTitleTaskTC,
-    UpdateTaskTitleAC, updateStatusTaskTC
+    updateStatusTaskTC
 } from "../../state/tasks-reducer";
 import {useDispatch} from "react-redux";
 import {TaskStatus} from "../../api/toDoLists-api";
@@ -15,7 +12,6 @@ import {AppThunkDispatch} from "../../state/store";
 export const useTask = (idList: string, idTask: string) => {
 
     const dispatch: AppThunkDispatch = useDispatch();
-
 
 
     const delTask = useCallback(() => {

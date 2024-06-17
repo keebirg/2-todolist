@@ -1,48 +1,8 @@
-import {v1} from "uuid";
 import {toDoListsAPI, ToDoListServerType} from "../api/toDoLists-api";
 import {Dispatch} from "redux";
+import {setErrorAC, setStatusAC} from "./app-reducer";
 
 
-
-export type FilterTypes = "All" | "Active" | "Completed";
-
-export type ToDoListAppType =ToDoListServerType & {
-    filter: FilterTypes
-}
-
-export type AddListActionType = {
-    type: 'ADD-LIST'
-    newToDoList: ToDoListServerType
-}
-export type DelListActionType = {
-    type: 'DEL-LIST'
-    idList: string
-}
-type UpdateFilterActionType = {
-    type: 'FILTER-UPDATE'
-    idList: string
-    filter: FilterTypes
-}
-type UpdateListTitleActionType = {
-    type: 'UPDATE-LIST-TITLE'
-    idList: string
-    newTitle: string
-}
-export type SetToDoListsActionType={
-    type:'SET-TO-DO-LISTS'
-    toDoLists: Array<ToDoListServerType>
-}
-
-type actionType =
-    AddListActionType
-    | DelListActionType
-    | UpdateFilterActionType
-    | UpdateListTitleActionType
-    | SetToDoListsActionType
-
-
-export const idToDoList1 = v1();
-export const idToDoList2 = v1();
 
 
 // let initialState: Array<ToDoListsAppType> = [
@@ -50,7 +10,7 @@ export const idToDoList2 = v1();
 // ]
 
 
-export const todolistsReducer = (state: Array<ToDoListAppType> = [], action: actionType): Array<ToDoListAppType> => {
+export const toDoListsReducer = (state: Array<ToDoListAppType> = [], action: actionType): Array<ToDoListAppType> => {
 
     const startState = state
 
@@ -58,7 +18,7 @@ export const todolistsReducer = (state: Array<ToDoListAppType> = [], action: act
         case'ADD-LIST': {
             const newStartState = [...startState]
 
-            newStartState.push({...action.newToDoList, filter: "All"});
+            newStartState.push({...action.newToDoList, filter: "All", disabled: false});
 
             return newStartState
         }
@@ -84,17 +44,25 @@ export const todolistsReducer = (state: Array<ToDoListAppType> = [], action: act
             const newStartState = startState.map((data) => {
                 return {...data}
             })
-
             newStartState.map((list) => {
                 if (list.id === action.idList) list.title = action.newTitle;
             })
-
             return newStartState
         }
 
-        case 'SET-TO-DO-LISTS':{
-            return action.toDoLists.map(tdl=>{
-                return {...tdl, filter: "All"}
+        case'UPDATE-LIST-DISABLED':{
+            const newStartState = startState.map((data) => {
+                return {...data}
+            })
+            newStartState.map((list)=>{
+                if(list.id===action.idList) list.disabled=action.disabled
+            })
+            return newStartState
+        }
+
+        case 'SET-TO-DO-LISTS': {
+            return action.toDoLists.map(tdl => {
+                return {...tdl, filter: "All", disabled: false}
             })
         }
         default:
@@ -102,57 +70,113 @@ export const todolistsReducer = (state: Array<ToDoListAppType> = [], action: act
     }
 };
 
-export const AddListAC = (newToDoList: ToDoListServerType): AddListActionType => {
-    return {type: 'ADD-LIST', newToDoList: newToDoList}
+
+export const AddListAC = (newToDoList: ToDoListServerType) => {
+    return {type: 'ADD-LIST', newToDoList: newToDoList} as const
 }
-export const DelListAC = (idList: string): DelListActionType => {
-    return {type: 'DEL-LIST', idList: idList}
+export const DelListAC = (idList: string) => {
+    return {type: 'DEL-LIST', idList: idList} as const
 }
-export const UpdateFilterAC = (idList: string, filter: FilterTypes): UpdateFilterActionType => {
-    return {type: 'FILTER-UPDATE', filter: filter, idList: idList}
+export const UpdateFilterAC = (idList: string, filter: FilterTypes) => {
+    return {type: 'FILTER-UPDATE', filter: filter, idList: idList} as const
 }
-export const UpdateListTitleAC = (idList: string, newTitle: string): UpdateListTitleActionType => {
-    return {type: 'UPDATE-LIST-TITLE', newTitle: newTitle, idList: idList}
+export const UpdateListTitleAC = (idList: string, newTitle: string) => {
+    return {type: 'UPDATE-LIST-TITLE', newTitle: newTitle, idList: idList} as const
 }
-export const SetToDoListsAC = (toDoLists: Array<ToDoListServerType>):SetToDoListsActionType  => {
-    return {type: 'SET-TO-DO-LISTS', toDoLists:toDoLists}
+export const SetToDoListsAC = (toDoLists: Array<ToDoListServerType>) => {
+    return {type: 'SET-TO-DO-LISTS', toDoLists: toDoLists} as const
+}
+export const UpdateListDisabledAC = (idList: string, disabled: boolean) => {
+    return {type: 'UPDATE-LIST-DISABLED', idList: idList, disabled: disabled} as const
 }
 
 
-
-export const fetchToDoListsTC=()=>{
-    return (dispatch: Dispatch)=>{
+export const fetchToDoListsTC = () => {
+    return (dispatch: Dispatch) => {
+        dispatch(setStatusAC('loading'))
         toDoListsAPI.getToDoLists()
-            .then(res=>{
-                const action=SetToDoListsAC(res.data)
-                dispatch(action)
+            .then(res => {
+                dispatch(setStatusAC('idle'))
+                dispatch(SetToDoListsAC(res.data))
+            })
+            .catch(error=>{
+                dispatch(setErrorAC(error.message))
+                dispatch(setStatusAC('idle'))
             })
     }
 }
-export const delToDoListTC=(idList: string)=>{
-    return (dispatch: Dispatch)=>{
+export const delToDoListTC = (idList: string) => {
+    return (dispatch: Dispatch) => {
+        dispatch(setStatusAC('loading'))
+        dispatch(UpdateListDisabledAC(idList, true))
         toDoListsAPI.deleteToDoList(idList)
-            .then(res=>{
-                const action=DelListAC(idList)
-                dispatch(action)
+            .then(res => {
+                dispatch(setStatusAC('idle'))
+                dispatch(DelListAC(idList))
+            })
+            .catch(error=>{
+                dispatch(UpdateListDisabledAC(idList, false))
+                dispatch(setErrorAC(error.message))
+                dispatch(setStatusAC('idle'))
             })
     }
 }
-export const addToDoListTC=(titleList: string)=>{
-    return (dispatch: Dispatch)=>{
+export const addToDoListTC = (titleList: string) => {
+    return (dispatch: Dispatch) => {
+        dispatch(setStatusAC('loading'))
         toDoListsAPI.createToDoList(titleList)
-            .then(res=>{
-                const action=AddListAC(res.data.data.item)
-                dispatch(action)
+            .then(res => {
+                dispatch(setStatusAC('idle'))
+                if (res.data.resultCode === 0) {
+                    dispatch(AddListAC(res.data.data.item))
+                } else if (res.data.messages.length > 0) {
+                    dispatch(setErrorAC(res.data.messages[0]))
+                } else {
+                    dispatch(setErrorAC('error addToDoListTC'))
+                }
+            })
+            .catch(error=>{
+                dispatch(setErrorAC(error.message))
+                dispatch(setStatusAC('idle'))
             })
     }
 }
-export const updateToDoListTC=(idList: string, newTitle: string)=>{
-    return (dispatch: Dispatch)=>{
+export const updateToDoListTC = (idList: string, newTitle: string) => {
+    return (dispatch: Dispatch) => {
+        dispatch(setStatusAC('loading'))
         toDoListsAPI.updateToDoList(idList, newTitle)
-            .then(res=>{
-                const action=UpdateListTitleAC(idList, newTitle)
+            .then(res => {
+                dispatch(setStatusAC('idle'))
+                const action = UpdateListTitleAC(idList, newTitle)
                 dispatch(action)
+            })
+            .catch(error=>{
+                dispatch(setErrorAC(error.message))
+                dispatch(setStatusAC('idle'))
             })
     }
 }
+
+
+export type FilterTypes = "All" | "Active" | "Completed";
+
+
+export type ToDoListAppType = ToDoListServerType & {
+    filter: FilterTypes
+    disabled: boolean
+}
+
+export type AddListActionType = ReturnType<typeof AddListAC>
+export type DelListActionType = ReturnType<typeof DelListAC>
+type UpdateFilterActionType = ReturnType<typeof UpdateFilterAC>
+type UpdateListTitleActionType = ReturnType<typeof UpdateListTitleAC>
+type UpdateListDisabledActionType = ReturnType<typeof UpdateListDisabledAC>
+export type SetToDoListsActionType = ReturnType<typeof SetToDoListsAC>
+
+type actionType =
+    AddListActionType
+    | DelListActionType
+    | UpdateFilterActionType
+    | UpdateListTitleActionType
+    | SetToDoListsActionType
+    | UpdateListDisabledActionType

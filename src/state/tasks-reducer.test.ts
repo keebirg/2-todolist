@@ -2,12 +2,11 @@ import {v1} from "uuid";
 import {
     AddTaskAC,
     DelTaskAC, SetTaskAC,
-    tasksReducer, ToDoListTasksType,
-    UpdateCheckboxTaskAC,
+    tasksReducer, TaskType, ToDoListTasksType,
+    UpdateCheckboxTaskAC, UpdateDisabledTaskAC,
     UpdateTaskTitleAC
 } from "./tasks-reducer";
-import {TaskPriority, TaskStatus, TaskType} from "../api/toDoLists-api";
-import {todolistsReducer} from "./todolists-reducer";
+import {TaskPriority, TaskStatus} from "../api/toDoLists-api";
 
 
 const idToDoList1 = v1();
@@ -26,7 +25,8 @@ const startState: ToDoListTasksType = {
             order: 0,
             startDate: '',
             description: '',
-            priority: TaskPriority.Low
+            priority: TaskPriority.Low,
+            disabled:false
         },
         {
             todoListId: idToDoList1,
@@ -38,7 +38,8 @@ const startState: ToDoListTasksType = {
             order: 0,
             startDate: '',
             description: '',
-            priority: TaskPriority.Low
+            priority: TaskPriority.Low,
+            disabled:false
         },
         {
             todoListId: idToDoList1,
@@ -50,7 +51,8 @@ const startState: ToDoListTasksType = {
             order: 0,
             startDate: '',
             description: '',
-            priority: TaskPriority.Low
+            priority: TaskPriority.Low,
+            disabled:false
         },
     ],
     [idToDoList2]: [
@@ -64,7 +66,8 @@ const startState: ToDoListTasksType = {
             order: 0,
             startDate: '',
             description: '',
-            priority: TaskPriority.Low
+            priority: TaskPriority.Low,
+            disabled:false
         },
         {
             todoListId: idToDoList2,
@@ -76,7 +79,8 @@ const startState: ToDoListTasksType = {
             order: 0,
             startDate: '',
             description: '',
-            priority: TaskPriority.Low
+            priority: TaskPriority.Low,
+            disabled:false
         },
         {
             todoListId: idToDoList2,
@@ -88,7 +92,8 @@ const startState: ToDoListTasksType = {
             order: 0,
             startDate: '',
             description: '',
-            priority: TaskPriority.Low
+            priority: TaskPriority.Low,
+            disabled:false
         },
     ],
 }
@@ -104,7 +109,8 @@ const setStateTaskList3: Array<TaskType> = [
         order: 0,
         startDate: '',
         description: '',
-        priority: TaskPriority.Low
+        priority: TaskPriority.Low,
+        disabled:false
     },
 ]
 
@@ -120,7 +126,8 @@ test('correct todoList addTask', () => {
             order: 0,
             startDate: '',
             description: '',
-            priority: TaskPriority.Low
+            priority: TaskPriority.Low,
+            disabled:false
         }
     const action = AddTaskAC(newTask)
     const endState = tasksReducer(startState, action)
@@ -156,6 +163,15 @@ test('correct todoList updateCheckboxTask', () => {
     const endState = tasksReducer(startState, action)
 
     expect(endState[idToDoList1][0].status).toBe(TaskStatus.New)
+});
+
+
+test('correct todoList updateDisabledTask', () => {
+    const action = UpdateDisabledTaskAC(idToDoList1, startState[idToDoList1][0].id, true)
+    const endState = tasksReducer(startState, action)
+
+    expect(endState[idToDoList1][0].disabled).toBe(true)
+    expect(startState[idToDoList1][0].disabled).toBe(false)
 });
 
 test('correct todoList setTasks', () => {

@@ -1,8 +1,8 @@
 import {v1} from "uuid";
 import {
     ToDoListAppType,
-    todolistsReducer,
-    UpdateFilterAC,
+    toDoListsReducer,
+    UpdateFilterAC, UpdateListDisabledAC,
     UpdateListTitleAC
 } from "./todolists-reducer";
 
@@ -12,22 +12,31 @@ const idToDoList1 = v1();
 const idToDoList2 = v1();
 
 const startState: Array<ToDoListAppType> = [
-    {id: idToDoList1, title: "Job1", filter: "All", addedDate:"", order: 0},
-    {id: idToDoList2, title: "Job2", filter: "Active", addedDate:"", order: 0},
+    {id: idToDoList1, title: "Job1", filter: "All", addedDate:"", order: 0, disabled:false},
+    {id: idToDoList2, title: "Job2", filter: "Active", addedDate:"", order: 0, disabled:false},
 ]
 
 
 test('correct todoList filterUpdate', () => {
     const action=UpdateFilterAC(idToDoList1, "Active" )
-    const endState = todolistsReducer(startState, action)
+    const endState = toDoListsReducer(startState, action)
 
     expect(endState[0].filter).toBe("Active")
 
 });
 
+test('correct todoList disabledUpdate', () => {
+    const action=UpdateListDisabledAC(idToDoList1, true )
+    const endState = toDoListsReducer(startState, action)
+
+    expect(endState[0].disabled).toBe(true)
+    expect(startState[0].disabled).toBe(false)
+
+});
+
 test('correct todoList updateListTitle', () => {
     const action=UpdateListTitleAC(idToDoList1, "AAA" )
-    const endState = todolistsReducer(startState, action)
+    const endState = toDoListsReducer(startState, action)
 
     expect(endState[0].title).toBe("AAA")
 });

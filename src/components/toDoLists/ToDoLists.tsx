@@ -10,7 +10,7 @@ import {
     Button,
     Container,
     Grid,
-    IconButton,
+    IconButton, LinearProgress,
     Paper,
     Toolbar,
     Typography
@@ -19,6 +19,7 @@ import {Menu} from "@mui/icons-material";
 
 
 import {useToDoLists} from "./useToDoLists";
+import {ErrorSnackbar} from "../errorSnackbar/ErrorSnackbar";
 
 
 
@@ -29,7 +30,8 @@ export const ToDoLists = React.memo(() => {
     const {
         toDoListsPrimaryData,
         toDoListsTasks,
-        addList}=useToDoLists();
+        addList,
+        appDate}=useToDoLists();
 
 
     return (
@@ -51,8 +53,12 @@ export const ToDoLists = React.memo(() => {
                         </Typography>
                         <Button color="inherit">Login</Button>
                     </Toolbar>
+                    <BoxLinearProgress>
+                        {appDate.status==='loading' && <LinearProgress/>}
+                    </BoxLinearProgress>
                 </AppBar>
             </Box>
+            <ErrorSnackbar/>
             <Container fixed>
                 <Grid container>
                     <InputStyled>
@@ -72,6 +78,7 @@ export const ToDoLists = React.memo(() => {
                                         idList={list.id}
                                         key={list.id}
                                         filter={list.filter}
+                                        disabledList={list.disabled}
                                     />
                                 </Paper>
                             </Grid>
@@ -91,4 +98,8 @@ const ToDoListsStyled = styled.div`
 
 const InputStyled = styled.div`
   padding: 15px;
+`
+
+const BoxLinearProgress=styled.div`
+    height: 4px;
 `

@@ -12,7 +12,7 @@ const meta: Meta<typeof Task> = {
     tags: ['autodocs'],
 
     args: {
-        task: {todoListId: "idToDoList2", id: v1(), title: "js", status: TaskStatus.Completed, addedDate:'', deadline:'', order:0, startDate:'', description:'', priority:TaskPriority.Low },
+        task: {todoListId: "idToDoList2", id: v1(), title: "js", status: TaskStatus.Completed, addedDate:'', deadline:'', order:0, startDate:'', description:'', priority:TaskPriority.Low, disabled:false },
         idList: 'id List',
         // onChangeCheckBox: action('Status changed inside Task'),
         // updateTaskTitle:action('Title changed inside Task'),
