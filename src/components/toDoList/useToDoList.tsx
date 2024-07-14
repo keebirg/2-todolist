@@ -1,12 +1,12 @@
 import {useDispatch} from "react-redux";
 import {useCallback, useEffect} from "react";
-import {addTaskTC, fetchTaskTC, TaskType} from "../../state/tasks-reducer";
+import {addTaskTC, fetchTaskTC, TaskType} from "../task/tasks-reducer";
 import {
     delToDoListTC,
     FilterTypes,
     UpdateFilterAC,
     updateToDoListTC
-} from "../../state/todolists-reducer";
+} from "../toDoLists/todolists-reducer";
 import {TaskStatus} from "../../api/toDoLists-api";
 import {AppThunkDispatch} from "../../state/store";
 

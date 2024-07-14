@@ -1,13 +1,24 @@
-import {useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {
     CreateResponseTaskType,
-    CreateResponseToDoListType, DeleteResponseTaskType,
-    DeleteResponseToDoListType, GetResponseTaskType,
+    CreateResponseToDoListType,
+    DeleteResponseTaskType,
+    DeleteResponseToDoListType,
+    GetResponseTaskType,
     ToDoListServerType,
-    toDoListsAPI, UpdateResponseTaskType,
-    UpdateResponseToDoListType, DataToUpdateType, TaskStatus, TaskPriority
+    toDoListsAPI,
+    UpdateResponseTaskType,
+    UpdateResponseToDoListType,
+    DataToUpdateType,
+    TaskStatus,
+    TaskPriority,
+    authAPI,
+    GetResponseAuthMeType,
+    DeleteResponseLogoutType, PostResponseLoginType
 } from "./toDoLists-api";
 import {v1} from "uuid";
+import {useFormik} from "formik";
+
 
 export default {
     title: 'API'
@@ -78,7 +89,7 @@ export const DeleteToDoList = () => {
                 onChange={(e) => {
                     setId(e.currentTarget.value)
                 }}>
-            {selectData.map((item, ) => {
+            {selectData.map((item,) => {
                 return <option
                     key={v1()}
                     value={item.id}
@@ -123,7 +134,7 @@ export const UpdateToDoList = () => {
                 onChange={(e) => {
                     setId(e.currentTarget.value)
                 }}>
-            {selectData.map((item, ) => {
+            {selectData.map((item,) => {
                 return <option
                     key={v1()}
                     value={item.id}
@@ -233,11 +244,10 @@ export const DeleteTask = () => {
     const [idTask, setIdTask] = useState<string>("")
     const [selectDataToDoLists, setSelectDataToDoLists] = useState<Array<ToDoListServerType>>([])
     const [selectDataTasks, setSelectDataTasks] = useState<GetResponseTaskType>()
-    const [active, setActive]=useState(false)
+    const [active, setActive] = useState(false)
 
 
-
-    const temp=(id:string)=>{
+    const temp = (id: string) => {
         toDoListsAPI.getTasks(id)
             .then((res) => {
                 setSelectDataTasks(res.data)
@@ -318,12 +328,11 @@ export const UpdateTask = () => {
     const [idTask, setIdTask] = useState<string>("")
     const [selectDataToDoLists, setSelectDataToDoLists] = useState<Array<ToDoListServerType>>([])
     const [selectDataTasks, setSelectDataTasks] = useState<GetResponseTaskType>()
-    const [active, setActive]=useState(false)
-    const [title, setTitle]=useState('')
+    const [active, setActive] = useState(false)
+    const [title, setTitle] = useState('')
 
 
-
-    const temp=(id:string)=>{
+    const temp = (id: string) => {
         toDoListsAPI.getTasks(id)
             .then((res) => {
                 setSelectDataTasks(res.data)
@@ -357,8 +366,8 @@ export const UpdateTask = () => {
         if (idToDoList && idTask) {
             setActive(true)
 
-            const task=selectDataTasks?.items.find((task)=>task.id===idTask)
-            const DataToUpdate:DataToUpdateType={
+            const task = selectDataTasks?.items.find((task) => task.id === idTask)
+            const DataToUpdate: DataToUpdateType = {
                 title: title,
                 status: task?.status || TaskStatus.New,
                 priority: task?.priority || TaskPriority.Low
@@ -396,7 +405,7 @@ export const UpdateTask = () => {
             })}
 
         </select> <span>Task</span>
-        <input style={{display: "block"} } value={title} onChange={(e) => setTitle(e.currentTarget.value)}/>
+        <input style={{display: "block"}} value={title} onChange={(e) => setTitle(e.currentTarget.value)}/>
 
         <button
             disabled={active}
@@ -404,5 +413,90 @@ export const UpdateTask = () => {
             onClick={updateTitleTasks}
         > update Tasks
         </button>
+    </div>
+}
+
+export const GetAuthMe = () => {
+    const [state, setState] = useState<GetResponseAuthMeType>();
+
+    const getAuthMe = () => {
+        authAPI.getAuthMe()
+            .then((res) => {
+                setState(res.data)
+            })
+    }
+
+    return <div>
+        <div>{JSON.stringify(state)}</div>
+        <button onClick={getAuthMe}>get AuthMe</button>
+    </div>
+}
+
+export const Login = () => {
+    const [state, setState] = useState<PostResponseLoginType>();
+    const [isLogin, setIsLogin]=useState(true);
+
+
+    useEffect(()=>{
+        authAPI.getAuthMe()
+            .then((res) => {
+                if(res.data.resultCode === 0) setIsLogin(true)
+                else setIsLogin(false)
+            })
+    },[isLogin])
+
+    const formik = useFormik({
+        initialValues: {
+            email: '',
+            password: '',
+            rememberMe: false,
+        },
+        onSubmit: values => {
+            authAPI.login(values)
+                .then((res) => {
+                    setState(res.data)
+                    setIsLogin(true)
+                })
+        },
+    });
+
+
+    return <div>
+        <div>{JSON.stringify(state)}</div>
+        <form onSubmit={formik.handleSubmit}
+              style={{display:'flex', flexDirection:'column', width:'20%', gap:'10px'}}>
+            <input
+                placeholder='email'
+                {...formik.getFieldProps('email')}
+            />
+            <input
+                placeholder='password'
+                type='password'
+                {...formik.getFieldProps('password')}
+            />
+            <div>
+                <input
+                    type='checkbox'
+                    {...formik.getFieldProps('rememberMe')}
+                    checked={formik.values.rememberMe}
+                /> <label>remember me</label>
+            </div>
+            <button type={"submit"} disabled={isLogin}>Login</button>
+        </form>
+    </div>
+}
+
+export const Logout=()=>{
+    const [state, setState] = useState<DeleteResponseLogoutType>();
+
+    const logout = () => {
+        authAPI.logout()
+            .then((res) => {
+                setState(res.data)
+            })
+    }
+    return<div>
+        <div>{JSON.stringify(state)}</div>
+        <button onClick={logout}>logout AuthMe</button>
     </div>
 }

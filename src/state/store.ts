@@ -4,16 +4,18 @@ import {
     combineReducers,
     legacy_createStore
 } from "redux";
-import {toDoListsReducer} from "./todolists-reducer";
-import {tasksReducer} from "./tasks-reducer";
+import {toDoListsReducer} from "../components/toDoLists/todolists-reducer";
+import {tasksReducer} from "../components/task/tasks-reducer";
 import {thunk, ThunkDispatch} from "redux-thunk";
-import {appReducer} from "./app-reducer";
+import {appReducer} from "../components/app/app-reducer";
+import {authReducer} from "../components/login/auth-reducer";
 
 
 export const rootReducer=combineReducers({
     todolists:toDoListsReducer,
     tasks: tasksReducer,
-    app:appReducer
+    app:appReducer,
+    auth:authReducer
 })
 
 

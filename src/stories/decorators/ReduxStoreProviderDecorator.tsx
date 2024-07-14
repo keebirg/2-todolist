@@ -2,8 +2,8 @@ import React from 'react'
 import { Provider } from 'react-redux';
 import {AppRootState} from "../../state/store";
 import {combineReducers,  legacy_createStore} from "redux";
-import {toDoListsReducer} from "../../state/todolists-reducer";
-import {tasksReducer} from "../../state/tasks-reducer";
+import {toDoListsReducer} from "../../components/toDoLists/todolists-reducer";
+import {tasksReducer} from "../../components/task/tasks-reducer";
 import {v1} from "uuid";
 import {TaskPriority, TaskStatus} from "../../api/toDoLists-api";
 
@@ -36,7 +36,12 @@ const initialGlobalState:AppRootState = {
     },
     app:{
         status:'idle',
-        error:null
+        error:null,
+        isInitialized:false,
+        isLoggedIn:false
+    },
+    auth:{
+        disabled:false
     }
 };
 

@@ -3,7 +3,7 @@ import {
     delTaskTC,
     updateTitleTaskTC,
     updateStatusTaskTC
-} from "../../state/tasks-reducer";
+} from "./tasks-reducer";
 import {useDispatch} from "react-redux";
 import {TaskStatus} from "../../api/toDoLists-api";
 import {AppThunkDispatch} from "../../state/store";

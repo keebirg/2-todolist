@@ -6,7 +6,7 @@ import {
     UpdateCheckboxTaskAC, UpdateDisabledTaskAC,
     UpdateTaskTitleAC
 } from "./tasks-reducer";
-import {TaskPriority, TaskStatus} from "../api/toDoLists-api";
+import {TaskPriority, TaskStatus} from "../../api/toDoLists-api";
 
 
 const idToDoList1 = v1();

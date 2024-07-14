@@ -1,8 +1,8 @@
 import axios from "axios";
 
 
-const instance=axios.create({
-    baseURL:"https://social-network.samuraijs.com/api/1.1/",
+const instance = axios.create({
+    baseURL: "https://social-network.samuraijs.com/api/1.1/",
     withCredentials: true,
     headers: {
         'API-KEY': '6f86b70c-d3ce-46fc-9255-2dc0a7f5ea99'
@@ -16,14 +16,14 @@ export type ToDoListServerType = {
     title: string
 };
 
-export enum TaskStatus{
+export enum TaskStatus {
     New,
     InProgress,
     Completed,
     Draft
 }
 
-export enum TaskPriority{
+export enum TaskPriority {
     Low,
     Middle,
     Hi,
@@ -32,16 +32,16 @@ export enum TaskPriority{
 }
 
 export  type TaskTypeAPI = {
-        id: string
-        title: string
-        description: string
-        todoListId: string
-        order: number
-        status: TaskStatus
-        priority: TaskPriority
-        startDate: string
-        deadline: string
-        addedDate: string
+    id: string
+    title: string
+    description: string
+    todoListId: string
+    order: number
+    status: TaskStatus
+    priority: TaskPriority
+    startDate: string
+    deadline: string
+    addedDate: string
 }
 
 export type GetResponseTaskType = {
@@ -57,7 +57,7 @@ export type ResponseType<D> = {
     data: D
 }
 
-export type DataToUpdateType={
+export type DataToUpdateType = {
     title: string
     status: TaskStatus
     priority: TaskPriority
@@ -71,6 +71,30 @@ export type DeleteResponseTaskType = ResponseType<{}>
 export type UpdateResponseTaskType = ResponseType<{ item: TaskTypeAPI }>
 export type CreateResponseTaskType = ResponseType<{ item: TaskTypeAPI }>
 
+export type GetResponseAuthMeType = ResponseType<{
+    id: number
+    email: string
+    login: string}>
+export type DeleteResponseLogoutType = ResponseType<{}>
+export type PostResponseLoginType = ResponseType<{userId:number, 'token':string}>
+
+export type LoginServerType={
+    email:string
+    password:string
+    rememberMe: boolean
+    captcha?:boolean
+}
+export const authAPI = {
+    getAuthMe() {
+        return instance.get<GetResponseAuthMeType>(`auth/me/`)
+    },
+    login(data: LoginServerType) {
+        return instance.post<PostResponseLoginType>(`auth/login/`, data)
+    },
+    logout() {
+        return instance.delete<DeleteResponseLogoutType>(`auth/login/`)
+    },
+}
 
 export const toDoListsAPI = {
     getToDoLists() {
@@ -105,5 +129,4 @@ export const toDoListsAPI = {
     updateTask(idToDoLost: string, idTask: string, DataToUpdate: DataToUpdateType) {
         return instance.put<UpdateResponseTaskType>(`todo-lists/${idToDoLost}/tasks/${idTask}`, DataToUpdate)
     },
-
 }

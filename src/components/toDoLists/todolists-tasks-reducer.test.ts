@@ -5,8 +5,8 @@ import {
     DelListAC, SetToDoListsAC, ToDoListAppType,
     toDoListsReducer
 } from "./todolists-reducer";
-import {tasksReducer, ToDoListTasksType} from "./tasks-reducer";
-import {TaskPriority, TaskStatus} from "../api/toDoLists-api";
+import {tasksReducer, ToDoListTasksType} from "../task/tasks-reducer";
+import {TaskPriority, TaskStatus} from "../../api/toDoLists-api";
 
 const idToDoList1 = v1();
 const idToDoList2 = v1();

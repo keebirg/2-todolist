@@ -1,6 +1,6 @@
-import {toDoListsAPI, ToDoListServerType} from "../api/toDoLists-api";
+import {toDoListsAPI, ToDoListServerType} from "../../api/toDoLists-api";
 import {Dispatch} from "redux";
-import {setErrorAC, setStatusAC} from "./app-reducer";
+import {setErrorAC, setStatusAC} from "../app/app-reducer";
 
 
 
@@ -23,9 +23,7 @@ export const toDoListsReducer = (state: Array<ToDoListAppType> = [], action: act
             return newStartState
         }
         case'DEL-LIST': {
-            const newStartState = startState.filter((data) => data.id !== action.idList);
-
-            return newStartState
+            return startState.filter((data) => data.id !== action.idList);
         }
         case'FILTER-UPDATE': {
             const newStartState = startState.map((data) => {

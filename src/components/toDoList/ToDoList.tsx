@@ -6,8 +6,8 @@ import {Button, IconButton} from "@mui/material";
 import {Delete} from "@mui/icons-material";
 import {Task} from "../task/Task";
 import {useToDoList} from "./useToDoList";
-import {FilterTypes} from "../../state/todolists-reducer";
-import {TaskType} from "../../state/tasks-reducer";
+import {FilterTypes} from "../toDoLists/todolists-reducer";
+import {TaskType} from "../task/tasks-reducer";
 
 
 

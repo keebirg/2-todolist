@@ -2,18 +2,19 @@ import {
     AddListActionType,
     DelListActionType,
     SetToDoListsActionType
-} from "./todolists-reducer";
-import {DataToUpdateType, TaskStatus, TaskTypeAPI, toDoListsAPI} from "../api/toDoLists-api";
+} from "../toDoLists/todolists-reducer";
+import {DataToUpdateType, TaskStatus, TaskTypeAPI, toDoListsAPI} from "../../api/toDoLists-api";
 import {Dispatch} from "redux";
-import {AppRootState} from "./store";
-import {setErrorAC, setStatusAC} from "./app-reducer";
+import {AppRootState} from "../../state/store";
+import {setErrorAC, setStatusAC} from "../app/app-reducer";
 
 
 export const tasksReducer = (state: ToDoListTasksType = {}, action: ActionType): ToDoListTasksType => {
 
     switch (action.type) {
 
-        case'ADD-LIST':  return {...state, [action.newToDoList.id]: []}
+        case'ADD-LIST':
+            return {...state, [action.newToDoList.id]: []}
 
 
         case'DEL-LIST': {
@@ -35,7 +36,7 @@ export const tasksReducer = (state: ToDoListTasksType = {}, action: ActionType):
 
         case'ADD-TASK': {
             const newStartState = {...state, [action.newTask.todoListId]: [...state[action.newTask.todoListId]]};
-            newStartState[action.newTask.todoListId].push({...action.newTask, disabled:false});
+            newStartState[action.newTask.todoListId].push({...action.newTask, disabled: false});
 
             return newStartState
         }
@@ -60,29 +61,27 @@ export const tasksReducer = (state: ToDoListTasksType = {}, action: ActionType):
         }
 
         case'UPDATE-CHECKBOX-TASK': {
-            const newStartState = {
+            return {
                 ...state, [action.idList]: state[action.idList].map((task) => {
                     if (task.id != action.idTask) return task
                     else return {...task, status: action.status}
                 })
             }
 
-            return newStartState
+
         }
         case'UPDATE-DISABLED-TASK': {
-            const newStartState = {
+            return {
                 ...state, [action.idList]: state[action.idList].map((task) => {
                     if (task.id != action.idTask) return task
                     else return {...task, disabled: action.disabled}
                 })
             }
 
-            return newStartState
         }
 
         case'SET-TASKS': {
-            const newStartState = {...state, [action.idList]: action.tasks.map((task)=>({...task, disabled: false}))}
-            return newStartState
+            return {...state, [action.idList]: action.tasks.map((task) => ({...task, disabled: false}))}
         }
 
         default:
@@ -119,7 +118,7 @@ export const fetchTaskTC = (idList: string) => {
                 dispatch(setStatusAC('idle'))
                 dispatch(SetTaskAC(idList, res.data.items))
             })
-            .catch(error=>{
+            .catch(error => {
                 dispatch(setErrorAC(error.message))
                 dispatch(setStatusAC('idle'))
             })
@@ -134,7 +133,7 @@ export const delTaskTC = (idList: string, idTask: string) => {
                 dispatch(setStatusAC('idle'))
                 dispatch(DelTaskAC(idList, idTask))
             })
-            .catch(error=>{
+            .catch(error => {
                 dispatch(UpdateDisabledTaskAC(idList, idTask, false))
                 dispatch(setErrorAC(error.message))
                 dispatch(setStatusAC('idle'))
@@ -164,7 +163,7 @@ export const updateTitleTaskTC = (idList: string, idTask: string, title: string)
                 dispatch(UpdateDisabledTaskAC(idList, idTask, false))
                 dispatch(UpdateTaskTitleAC(idList, idTask, title))
             })
-            .catch(error=>{
+            .catch(error => {
                 dispatch(UpdateDisabledTaskAC(idList, idTask, false))
                 dispatch(setErrorAC(error.message))
                 dispatch(setStatusAC('idle'))
@@ -191,9 +190,15 @@ export const updateStatusTaskTC = (idList: string, idTask: string, status: TaskS
             .then(res => {
                 dispatch(setStatusAC('idle'))
                 dispatch(UpdateDisabledTaskAC(idList, idTask, false))
-                dispatch(UpdateCheckboxTaskAC(idList, idTask, status))
+                if (res.data.resultCode === 0) {
+                    dispatch(UpdateCheckboxTaskAC(idList, idTask, status))
+                } else if (res.data.messages.length > 0) {
+                    dispatch(setErrorAC(res.data.messages[0]))
+                } else {
+                    dispatch(setErrorAC('error updateStatusTaskTC'))
+                }
             })
-            .catch(error=>{
+            .catch(error => {
                 dispatch(UpdateDisabledTaskAC(idList, idTask, false))
                 dispatch(setErrorAC(error.message))
                 dispatch(setStatusAC('idle'))
@@ -214,7 +219,7 @@ export const addTaskTC = (idList: string, title: string) => {
                     dispatch(setErrorAC('error addTaskTC'))
                 }
             })
-            .catch(error=>{
+            .catch(error => {
                 dispatch(setErrorAC(error.message))
                 dispatch(setStatusAC('idle'))
             })

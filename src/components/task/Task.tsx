@@ -6,7 +6,7 @@ import {Delete} from "@mui/icons-material";
 import styled from "styled-components";
 import {useTask} from "./useTask";
 import {TaskStatus} from "../../api/toDoLists-api";
-import {TaskType} from "../../state/tasks-reducer";
+import {TaskType} from "./tasks-reducer";
 
 type TaskPropsType = {
     task: TaskType

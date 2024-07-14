@@ -4,17 +4,17 @@ import {useCallback, useEffect} from "react";
 import {
     addToDoListTC, fetchToDoListsTC,
     ToDoListAppType,
-} from "../../state/todolists-reducer";
-import {ToDoListTasksType} from "../../state/tasks-reducer";
-import {AppStateType} from "../../state/app-reducer";
+} from "./todolists-reducer";
+import {ToDoListTasksType} from "../task/tasks-reducer";
+import {useNavigate} from "react-router-dom";
 
 
 export const useToDoLists=()=>{
     const dispatch: AppThunkDispatch = useDispatch();
     const toDoListsPrimaryData = useSelector<AppRootState, Array<ToDoListAppType>>(state => state.todolists)
     const toDoListsTasks = useSelector<AppRootState, ToDoListTasksType>(state => state.tasks)
-    const appDate=useSelector<AppRootState, AppStateType>(state => state.app)
-
+    const isLoggedIn=useSelector<AppRootState, boolean>(state=>state.app.isLoggedIn)
+    const navigate = useNavigate()
 
     useEffect(()=>{
         dispatch(fetchToDoListsTC())
@@ -24,13 +24,14 @@ export const useToDoLists=()=>{
     const addList = useCallback(
         (titleList: string) => {
             dispatch(addToDoListTC(titleList))
-        }, [dispatch])
+        }, [])
 
 
     return {
         toDoListsPrimaryData,
         toDoListsTasks,
         addList,
-        appDate
+        isLoggedIn,
+        navigate,
     }
 }

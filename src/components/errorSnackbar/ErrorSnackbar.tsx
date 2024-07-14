@@ -3,7 +3,7 @@ import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootState} from "../../state/store";
-import {setErrorAC} from "../../state/app-reducer";
+import {setErrorAC} from "../app/app-reducer";
 
 export const ErrorSnackbar=()=> {
     const dispatch=useDispatch();
