@@ -8,6 +8,7 @@ import {Header} from "../header/Header";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootState, AppThunkDispatch} from "../../state/store";
 import {getAuthMeTC} from "./app-reducer";
+import {ErrorSnackbar} from "../errorSnackbar/ErrorSnackbar";
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
     return (
         <BrowserRouter>
             <AppStyled>
+                <ErrorSnackbar/>
                 <Header/>
                 <Routes>
                     <Route path={"/"} element={<ToDoLists/>}/>

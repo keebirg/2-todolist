@@ -11,7 +11,7 @@ import {useNavigate} from "react-router-dom";
 
 export const useToDoLists=()=>{
     const dispatch: AppThunkDispatch = useDispatch();
-    const toDoListsPrimaryData = useSelector<AppRootState, Array<ToDoListAppType>>(state => state.todolists)
+    const toDoListsPrimaryData = useSelector<AppRootState, Array<ToDoListAppType>>(state => state.toDoLists)
     const toDoListsTasks = useSelector<AppRootState, ToDoListTasksType>(state => state.tasks)
     const isLoggedIn=useSelector<AppRootState, boolean>(state=>state.app.isLoggedIn)
     const navigate = useNavigate()

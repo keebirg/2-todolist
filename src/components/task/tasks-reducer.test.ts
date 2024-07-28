@@ -98,7 +98,7 @@ const startState: ToDoListTasksType = {
     ],
 }
 
-const setStateTaskList3: Array<TaskType> = [
+const StateTaskList3: Array<TaskType> = [
     {
         todoListId: idToDoList3,
         id: v1(),
@@ -129,7 +129,7 @@ test('correct todoList addTask', () => {
             priority: TaskPriority.Low,
             disabled:false
         }
-    const action = AddTaskAC(newTask)
+    const action = AddTaskAC({newTask:newTask})
     const endState = tasksReducer(startState, action)
 
     expect(Object.keys(endState).length).toBe(2);
@@ -139,7 +139,7 @@ test('correct todoList addTask', () => {
 });
 
 test('correct todoList delTask', () => {
-    const action = DelTaskAC(idToDoList1, startState[idToDoList1][0].id)
+    const action = DelTaskAC({idList:idToDoList1, idTask:startState[idToDoList1][0].id})
     const endState = tasksReducer(startState, action)
 
     expect(startState[idToDoList1][0].title).toBe("js")
@@ -151,7 +151,7 @@ test('correct todoList delTask', () => {
 
 
 test('correct todoList updateTaskTitle', () => {
-    const action = UpdateTaskTitleAC(idToDoList1, startState[idToDoList1][0].id, "AAA")
+    const action = UpdateTaskTitleAC({idList:idToDoList1, idTask:startState[idToDoList1][0].id, newTitle:"AAA"})
     const endState = tasksReducer(startState, action)
 
     expect(endState[idToDoList1][0].title).toBe("AAA")
@@ -159,7 +159,7 @@ test('correct todoList updateTaskTitle', () => {
 
 
 test('correct todoList updateCheckboxTask', () => {
-    const action = UpdateCheckboxTaskAC(idToDoList1, startState[idToDoList1][0].id, TaskStatus.New)
+    const action = UpdateCheckboxTaskAC({idList:idToDoList1, idTask:startState[idToDoList1][0].id, status:TaskStatus.New})
     const endState = tasksReducer(startState, action)
 
     expect(endState[idToDoList1][0].status).toBe(TaskStatus.New)
@@ -167,7 +167,7 @@ test('correct todoList updateCheckboxTask', () => {
 
 
 test('correct todoList updateDisabledTask', () => {
-    const action = UpdateDisabledTaskAC(idToDoList1, startState[idToDoList1][0].id, true)
+    const action = UpdateDisabledTaskAC({idList:idToDoList1, idTask:startState[idToDoList1][0].id, disabled:true})
     const endState = tasksReducer(startState, action)
 
     expect(endState[idToDoList1][0].disabled).toBe(true)
@@ -175,7 +175,7 @@ test('correct todoList updateDisabledTask', () => {
 });
 
 test('correct todoList setTasks', () => {
-    const action = SetTaskAC(idToDoList3, setStateTaskList3)
+    const action = SetTaskAC({idList:idToDoList3, tasks:StateTaskList3})
     const endState = tasksReducer(startState, action)
 
 

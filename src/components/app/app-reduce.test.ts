@@ -9,7 +9,7 @@ const startState:AppStateType={
 }
 
 test('correct app SET-STATUS', () => {
-    const action=setStatusAC('loading')
+    const action=setStatusAC({status:'loading'})
     const endState = appReducer(startState, action)
 
     expect(endState.status).toBe('loading')
@@ -18,7 +18,7 @@ test('correct app SET-STATUS', () => {
 });
 
 test('correct app SET-ERROR', () => {
-    const action=setErrorAC('AAA')
+    const action=setErrorAC({error:'AAA'})
     const endState = appReducer(startState, action)
 
     expect(endState.error).toBe('AAA')
@@ -27,7 +27,7 @@ test('correct app SET-ERROR', () => {
 });
 
 test('correct app SET-INITIALIZED', () => {
-    const action=setInitializedAC(true)
+    const action=setInitializedAC({isInitialized:true})
     const endState = appReducer(startState, action)
 
     expect(endState.isInitialized).toBe(true)
@@ -36,7 +36,7 @@ test('correct app SET-INITIALIZED', () => {
 });
 
 test('correct app SET-LOGGED', () => {
-    const action=setLoggedAC(true)
+    const action=setLoggedAC({isLoggedIn:true})
     const endState = appReducer(startState, action)
 
     expect(endState.isLoggedIn).toBe(true)

@@ -83,7 +83,7 @@ export type LoginServerType={
     password:string
     rememberMe: boolean
     captcha?:boolean
-}
+}|null
 export const authAPI = {
     getAuthMe() {
         return instance.get<GetResponseAuthMeType>(`auth/me/`)
@@ -95,6 +95,11 @@ export const authAPI = {
         return instance.delete<DeleteResponseLogoutType>(`auth/login/`)
     },
 }
+
+export type AuthAPIType=
+    typeof authAPI.getAuthMe|
+    typeof authAPI.login|
+    typeof authAPI.logout
 
 export const toDoListsAPI = {
     getToDoLists() {

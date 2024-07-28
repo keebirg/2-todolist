@@ -37,7 +37,7 @@ export const useToDoList=(idList:string, filter:FilterTypes, toDoListsTasks:Arra
 
     const filterClick = useCallback(
         (filter: FilterTypes) => {
-            dispatch(UpdateFilterAC(idList, filter))
+            dispatch(UpdateFilterAC({idList:idList, filter:filter}))
         }, [dispatch])
 
     const delList = useCallback(

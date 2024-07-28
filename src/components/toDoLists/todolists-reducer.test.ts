@@ -18,7 +18,7 @@ const startState: Array<ToDoListAppType> = [
 
 
 test('correct todoList filterUpdate', () => {
-    const action=UpdateFilterAC(idToDoList1, "Active" )
+    const action=UpdateFilterAC({idList:idToDoList1, filter:"Active"} )
     const endState = toDoListsReducer(startState, action)
 
     expect(endState[0].filter).toBe("Active")
@@ -26,7 +26,7 @@ test('correct todoList filterUpdate', () => {
 });
 
 test('correct todoList disabledUpdate', () => {
-    const action=UpdateListDisabledAC(idToDoList1, true )
+    const action=UpdateListDisabledAC({idList:idToDoList1, disabled:true} )
     const endState = toDoListsReducer(startState, action)
 
     expect(endState[0].disabled).toBe(true)
@@ -35,7 +35,7 @@ test('correct todoList disabledUpdate', () => {
 });
 
 test('correct todoList updateListTitle', () => {
-    const action=UpdateListTitleAC(idToDoList1, "AAA" )
+    const action=UpdateListTitleAC({idList:idToDoList1, newTitle:"AAA"} )
     const endState = toDoListsReducer(startState, action)
 
     expect(endState[0].title).toBe("AAA")

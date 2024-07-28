@@ -33,7 +33,7 @@ const startStateTasks: ToDoListTasksType = {
 
 test('correct todoList addList', () => {
 
-    const action = AddListAC({id: v1(), title: 'AAA', addedDate:"", order: 0})
+    const action = AddListAC({newToDoList:{id: v1(), title: 'AAA', addedDate:"", order: 0}})
 
     const endStateList = toDoListsReducer(startStateList, action)
     const endStateTask = tasksReducer(startStateTasks, action)
@@ -45,7 +45,7 @@ test('correct todoList addList', () => {
 });
 
 test('correct todoList delList', () => {
-    const action= DelListAC(idToDoList1)
+    const action= DelListAC({idList:idToDoList1})
 
     const endStateList = toDoListsReducer(startStateList, action)
     const endStateTask = tasksReducer(startStateTasks, action)
@@ -59,7 +59,7 @@ test('correct todoList delList', () => {
 
 test('correct set todoList', () => {
 
-    const action=SetToDoListsAC(startStateList)
+    const action=SetToDoListsAC({toDoLists:startStateList})
     const endStateList = toDoListsReducer([], action)
     const endStateTask = tasksReducer({}, action)
 

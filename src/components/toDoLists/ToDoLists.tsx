@@ -10,7 +10,6 @@ import {
 
 
 import {useToDoLists} from "./useToDoLists";
-import {ErrorSnackbar} from "../errorSnackbar/ErrorSnackbar";
 
 
 
@@ -36,8 +35,6 @@ export const ToDoLists = React.memo(() => {
 
     return (
         <ToDoListsStyled>
-
-            <ErrorSnackbar/>
             <Container fixed>
                 <Grid container>
                     <InputStyled>

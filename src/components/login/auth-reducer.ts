@@ -1,76 +1,95 @@
 import {authAPI, LoginServerType} from "../../api/toDoLists-api";
-import {setErrorAC,  setLoggedAC, setStatusAC} from "../app/app-reducer";
+import { setErrorAC, setLoggedAC, setStatusAC} from "../app/app-reducer";
 import {Dispatch} from "redux";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 
+const initialState = {
+    disabled: false
+}
 
+const slice = createSlice({
+    name: 'auth',
+    initialState: initialState,
+    reducers: {
+        UpdateDisabledLoginAC(state, action: PayloadAction<{ disabled: boolean }>) {
+            state.disabled=action.payload.disabled
+        },
 
-export const authReducer = (state: authType={disabled:false}, action: ActionType): authType => {
-    switch (action.type) {
-        case "LOGIN/UPDATE-DISABLED": return {...state, disabled:action.disabled}
-
-        default:
-            return state;
     }
+})
 
-}
+export const authReducer=slice.reducer;
+export const {UpdateDisabledLoginAC}=slice.actions;
 
 
-const UpdateDisabledLoginAC=(disabled:boolean)=>{
-    return{type:'LOGIN/UPDATE-DISABLED', disabled}
-}
-
-export const loginTC = (data:LoginServerType) => {
+export const loginTC = (data: LoginServerType) => {
     return (dispatch: Dispatch) => {
-        dispatch(UpdateDisabledLoginAC(true))
-        dispatch(setStatusAC('loading'))
+        dispatch(UpdateDisabledLoginAC({disabled:true}))
+        dispatch(setStatusAC({status: 'loading'}))
         authAPI.login(data)
             .then(res => {
-                dispatch(UpdateDisabledLoginAC(false))
-                dispatch(setStatusAC('idle'))
+                dispatch(UpdateDisabledLoginAC({disabled:false}))
                 if (res.data.resultCode === 0) {
-                    dispatch(setLoggedAC(true))
+                    dispatch(setLoggedAC({isLoggedIn: true}))
                 } else if (res.data.messages.length > 0) {
-                    dispatch(setErrorAC(res.data.messages[0]))
+                    dispatch(setErrorAC({error: res.data.messages[0]}))
                 } else {
-                    dispatch(setErrorAC('error getAuthMeTC'))
+                    dispatch(setErrorAC({error: 'error getAuthMeTC'}))
                 }
             })
-            .catch(error=>{
-                dispatch(UpdateDisabledLoginAC(false))
-                dispatch(setErrorAC(error.message))
-                dispatch(setStatusAC('idle'))
+            .catch(error => {
+                dispatch(UpdateDisabledLoginAC({disabled:false}))
+                dispatch(setErrorAC({error: error.message}))
+            })
+            .finally(()=>{
+                dispatch(setStatusAC({status: 'idle'}))
             })
     }
 }
 
 export const logoutTC = () => {
     return (dispatch: Dispatch) => {
-        dispatch(setStatusAC('loading'))
-        dispatch(UpdateDisabledLoginAC(true))
+        dispatch(setStatusAC({status: 'loading'}))
+        dispatch(UpdateDisabledLoginAC({disabled:true}))
         authAPI.logout()
             .then(res => {
-                dispatch(UpdateDisabledLoginAC(false))
-                dispatch(setStatusAC('idle'))
+                dispatch(UpdateDisabledLoginAC({disabled:false}))
+                dispatch(setStatusAC({status: 'idle'}))
                 if (res.data.resultCode === 0) {
-                    dispatch(setLoggedAC(false))
+                    dispatch(setLoggedAC({isLoggedIn: false}))
                 } else if (res.data.messages.length > 0) {
-                    dispatch(setErrorAC(res.data.messages[0]))
+                    dispatch(setErrorAC({error: res.data.messages[0]}))
                 } else {
-                    dispatch(setErrorAC('error getAuthMeTC'))
+                    dispatch(setErrorAC({error: 'error getAuthMeTC'}))
                 }
             })
-            .catch(error=>{
-                dispatch(UpdateDisabledLoginAC(false))
+            .catch(error => {
+                dispatch(UpdateDisabledLoginAC({disabled:false}))
                 dispatch(setErrorAC(error.message))
-                dispatch(setStatusAC('idle'))
+                dispatch(setStatusAC({status: 'idle'}))
             })
     }
 }
 
 
-
-type authType = {
-    disabled:boolean
-}
-type ActionType = ReturnType<typeof UpdateDisabledLoginAC>
+// export const authReducer = (state: authType = {disabled: false}, action: ActionType): authType => {
+//     switch (action.type) {
+//         case "LOGIN/UPDATE-DISABLED":
+//             return {...state, disabled: action.disabled}
+//
+//         default:
+//             return state;
+//     }
+//
+// }
+//
+//
+// const UpdateDisabledLoginAC = (disabled: boolean) => {
+//     return {type: 'LOGIN/UPDATE-DISABLED', disabled}
+// }
+//
+// type authType = {
+//     disabled: boolean
+// }
+// type ActionType = ReturnType<typeof UpdateDisabledLoginAC>
